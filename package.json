@@ -1,13 +1,34 @@
 {
   "name": "@projects/source",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
-  "scripts": {},
-  "private": true,
-  "dependencies": {},
+  "scripts": {
+    "enable-nx-docker-cache": "tsx tools/scripts/enable-nx-docker-cache.ts"
+  },
   "devDependencies": {
+    "@devcontainers/cli": "^0.50.2",
+    "@nx-dotnet/core": "^2.1.1",
+    "@nx/devkit": "18.2.4",
     "@nx/js": "18.2.4",
+    "@nx/plugin": "18.2.4",
     "@nx/workspace": "18.2.4",
-    "nx": "18.2.4"
-  }
+    "@swc-node/register": "^1.6.8",
+    "@swc/core": "^1.3.96",
+    "@types/js-yaml": "^4.0.5",
+    "@types/node": "^20.4.4",
+    "@types/prompts": "^2.4.4",
+    "commander": "^11.0.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint": "8.46.0",
+    "js-yaml": "^4.1.0",
+    "nx": "18.2.4",
+    "prettier": "^2.6.2",
+    "prompts": "^2.4.2",
+    "tsconfig-paths": "^4.2.0",
+    "tslib": "^2.5.3",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.0",
+    "webpack": "^5.88.2"
+  },
+  "type": "module"
 }
