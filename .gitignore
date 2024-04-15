@@ -1,0 +1,18 @@
+# Dotnet
+**/bin/
+**/obj/
+
+# Build outputs
+**/out/
+
+# Build outputs
+dist/
+
+# nx
+.nx/installation
+.nx/cache
+output.json
+
+# Node
+.npmrc
+node_modules/
