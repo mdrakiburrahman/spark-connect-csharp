@@ -1,0 +1,3 @@
+[submodule "/workspaces/spark-connect-csharp/projects/spark-connect-csharp/src/spark.connect.proto/spark-connect-protobuf"]
+	path = /workspaces/spark-connect-csharp/projects/spark-connect-csharp/src/spark.connect.proto/spark-connect-protobuf
+	url = https://github.com/mdrakiburrahman/spark-connect-proto
