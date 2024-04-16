@@ -1,0 +1,27 @@
+{
+  "name": "spark.connect.proto",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "targets": {
+    "sync": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/spark-connect-csharp/src/spark.connect.proto",
+        "commands": [
+          "git submodule update --init",
+          "git -C ./spark-connect-protobuf fetch",
+          "git -C ./spark-connect-protobuf checkout \"$(cat ./spark-connect-protobuf.version.txt)\""
+        ],
+        "parallel": false
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/spark-connect-csharp/src/spark.connect.proto",
+        "command": "rm -rf spark"
+      }
+    }
+  },
+  "tags": []
+}
