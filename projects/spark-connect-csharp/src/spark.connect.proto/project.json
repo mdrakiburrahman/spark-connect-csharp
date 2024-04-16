@@ -3,8 +3,21 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "targets": {
+    "init": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/spark-connect-protobuf"],
+      "options": {
+        "cwd": "projects/spark-connect-csharp/src/spark.connect.proto",
+        "commands": [
+          "rm -rf spark-connect-protobuf",
+          "git submodule add --force https://github.com/mdrakiburrahman/spark-connect-proto $(git rev-parse --show-toplevel)/projects/spark-connect-csharp/src/spark.connect.proto/spark-connect-protobuf > /dev/null 2>&1|| true"
+        ],
+        "parallel": false
+      }
+    },
     "sync": {
       "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/spark-connect-protobuf"],
       "options": {
         "cwd": "projects/spark-connect-csharp/src/spark.connect.proto",
         "commands": [
@@ -13,7 +26,8 @@
           "git -C ./spark-connect-protobuf checkout \"$(cat ./spark-connect-protobuf.version.txt)\""
         ],
         "parallel": false
-      }
+      },
+      "dependsOn": ["init"]
     },
     "clean": {
       "executor": "nx:run-commands",
