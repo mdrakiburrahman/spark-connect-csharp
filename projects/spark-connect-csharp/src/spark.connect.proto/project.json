@@ -45,7 +45,8 @@
       ],
       "options": {
         "configuration": "Debug",
-        "noDependencies": true
+        "noDependencies": true,
+        "verbosity": "minimal"
       },
       "configurations": {
         "production": {

@@ -25,6 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf ProtoRoot=".\spark-connect-protobuf" Include=".\spark-connect-protobuf\spark\connect\proto\*.proto" OutputDir="$(MSBuildProjectDirectory)" GrpcServices="None" CompileOutputs="true" />
+        <Protobuf ProtoRoot=".\spark-connect-protobuf" Include=".\spark-connect-protobuf\spark\connect\proto\*.proto" OutputDir="$(MSBuildProjectDirectory)" GrpcServices="None" CompileOutputs="false" />
+        <Protobuf ProtoRoot=".\spark-connect-protobuf" Include=".\spark-connect-protobuf\spark\connect\proto\*\*.proto" OutputDir="$(MSBuildProjectDirectory)" CompileOutputs="false" />
     </ItemGroup>
 </Project>
