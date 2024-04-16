@@ -19,7 +19,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "projects/spark-connect-csharp/src/spark.connect.proto",
-        "command": "rm -rf spark"
+        "command": "rm -rf TODO"
       }
     }
   },
