@@ -1,3 +1,0 @@
-[submodule "/workspaces/spark-connect-csharp/projects/spark-connect-csharp/src/spark.connect.proto/spark"]
-	path = /workspaces/spark-connect-csharp/projects/spark-connect-csharp/src/spark.connect.proto/spark
-	url = https://github.com/apache/spark
