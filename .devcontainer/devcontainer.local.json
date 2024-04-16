@@ -104,6 +104,7 @@
         "IBM.output-colorizer", // Colorize your output/test logs
         "ms-azuretools.vscode-docker", // Docker integration
         "MS-CST-E.vscode-devskim", // DevSkim security linter
+        "ms-dotnettools.csdevkit", // C# devkit
         "ms-dotnettools.csharp", // C# language support
         "ms-vsliveshare.vsliveshare-pack", // Allows easy code share
         "nrwl.angular-console", // Nx console plugin

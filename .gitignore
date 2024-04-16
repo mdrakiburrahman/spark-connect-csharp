@@ -16,3 +16,6 @@ output.json
 # Node
 .npmrc
 node_modules/
+
+# Extensions
+.mono/
