@@ -33,8 +33,26 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "projects/spark-connect-csharp/src/spark.connect.proto",
-        "command": "rm -rf TODO"
+        "command": "rm -rf spark"
       }
+    },
+    "build": {
+      "executor": "@nx-dotnet/core:build",
+      "outputs": ["{projectRoot}/spark", "{projectRoot}/bin"],
+      "inputs": [
+        "{projectRoot}/spark-connect-protobuf/spark/**/*.proto",
+        "{projectRoot}/spark-connect-protobuf.version.txt"
+      ],
+      "options": {
+        "configuration": "Debug",
+        "noDependencies": true
+      },
+      "configurations": {
+        "production": {
+          "configuration": "Release"
+        }
+      },
+      "dependsOn": ["sync", "clean"]
     }
   },
   "tags": []
