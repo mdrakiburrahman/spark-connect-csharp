@@ -49,7 +49,7 @@ namespace Spark.Connect.Test.Common.TestHost
         }
 
         /// <inheritdoc/>
-        public void Dispose()
+        public virtual void Dispose()
         {
             this.OnContainerTearDown();
             var compositeService = this.compositeService;
@@ -80,6 +80,9 @@ namespace Spark.Connect.Test.Common.TestHost
         /// </summary>
         protected virtual void OnContainerInitialized() { }
 
+        /// <summary>
+        /// Ensures the Docker host is running.
+        /// </summary>
         private void EnsureDockerHost()
         {
             if (this.dockerHost?.State == ServiceRunningState.Running)

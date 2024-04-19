@@ -39,6 +39,12 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         }
 
         /// <inheritdoc/>
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
+
+        /// <inheritdoc/>
         protected override ICompositeService Build()
         {
             var file = Path.Combine(
