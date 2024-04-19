@@ -7,7 +7,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EB38F8A1-86D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "spark.connect.proto", "src\spark.connect.proto\spark.connect.proto.csproj", "{EE4A62FE-E2BE-42CA-A177-A31110154EB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "spark.connect.test", "src\spark.connect.test\spark.connect.test.csproj", "{2E5A2DC5-32B8-4277-B817-B3AADF9110F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "spark.connect.test", "src\spark.connect.test\spark.connect.test.csproj", "{2E5A2DC5-32B8-4277-B817-B3AADF9110F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB97247A-9445-4085-81DB-FFA8E17B170B}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		CodeAnalysis.ruleset = CodeAnalysis.ruleset
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

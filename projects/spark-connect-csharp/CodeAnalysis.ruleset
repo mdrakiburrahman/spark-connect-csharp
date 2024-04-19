@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="New Rule Set" Description=" " ToolsVersion="16.0">
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1716" Action="Hidden" />
+    <Rule Id="CA1822" Action="Hidden" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1118" Action="None" />
+    <Rule Id="SA1124" Action="None" />
+    <Rule Id="SA1201" Action="None" />
+    <Rule Id="SA1202" Action="None" />
+    <Rule Id="SA1203" Action="None" />
+    <Rule Id="SA1204" Action="None" />
+    <Rule Id="SA1402" Action="None" />
+    <Rule Id="SA1615" Action="None" />
+    <Rule Id="SA1633" Action="None" />
+    <Rule Id="SA1649" Action="None" />
+    <Rule Id="SA1652" Action="None" />
+  </Rules>
+</RuleSet>
