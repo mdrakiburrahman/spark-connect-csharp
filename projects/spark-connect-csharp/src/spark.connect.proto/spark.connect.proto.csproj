@@ -12,6 +12,11 @@
         <Copyright>Apache Spark™</Copyright>
         <Description>Apache Spark Connect Protobuf Code.</Description>
         <Tags>Apache; Spark; gRPC; Protobuf</Tags>
+        <!-- Suppress warnings due to OutputDir using env-var: 
+             >>> https://github.com/grpc/grpc/blob/master/src/csharp/BUILD-INTEGRATION.md#seeing-a-warning-about-a-missing-expected-file
+             >>> https://github.com/grpc/grpc/issues/19816
+         -->
+        <Protobuf_NoWarnMissingExpected>true</Protobuf_NoWarnMissingExpected>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,6 +30,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!-- See parameters here: 
+             >>> https://github.com/grpc/grpc/blob/master/src/csharp/BUILD-INTEGRATION.md
+         -->
         <Protobuf ProtoRoot=".\spark-connect-protobuf" Include=".\spark-connect-protobuf\spark\connect\*.proto" OutputDir="$(MSBuildProjectDirectory)" GrpcServices="ClientOnly" CompileOutputs="false" />
     </ItemGroup>
 </Project>
