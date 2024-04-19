@@ -38,6 +38,7 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         public static void SparkConnectSanityTestsInit(TestContext context)
         {
             Console.WriteLine($"Setting up class scoped fixture for test {context.TestName}");
+            sparkConnectServer.Start();
         }
 
         /// <summary>

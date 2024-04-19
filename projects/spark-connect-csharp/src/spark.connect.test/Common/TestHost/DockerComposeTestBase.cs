@@ -21,12 +21,12 @@ namespace Spark.Connect.Test.Common.TestHost
         /// <summary>
         /// The Docker host composite service.
         /// </summary>
-        protected ICompositeService compositeService;
+        public ICompositeService CompositeService;
 
         /// <summary>
         /// The Docker host.
         /// </summary>
-        protected IHostService? dockerHost;
+        public IHostService? DockerHost;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DockerComposeTestBase"/> class.
@@ -34,26 +34,15 @@ namespace Spark.Connect.Test.Common.TestHost
         public DockerComposeTestBase()
         {
             this.EnsureDockerHost();
-            this.compositeService = this.Build();
-            try
-            {
-                this.compositeService.Start();
-            }
-            catch
-            {
-                this.compositeService.Dispose();
-                throw;
-            }
-
-            this.OnContainerInitialized();
+            this.CompositeService = this.Build();
         }
 
         /// <inheritdoc/>
         public virtual void Dispose()
         {
             this.OnContainerTearDown();
-            var compositeService = this.compositeService;
-            this.compositeService = null!;
+            var compositeService = this.CompositeService;
+            this.CompositeService = null!;
             try
             {
                 compositeService?.Dispose();
@@ -65,41 +54,59 @@ namespace Spark.Connect.Test.Common.TestHost
         }
 
         /// <summary>
+        /// Start containers.
+        /// </summary>
+        public virtual void Start()
+        {
+            try
+            {
+                this.CompositeService.Start();
+            }
+            catch
+            {
+                this.CompositeService.Dispose();
+                throw;
+            }
+
+            this.OnContainerInitialized();
+        }
+
+        /// <summary>
         /// Builds the composite service for Docker Compose tests.
         /// </summary>
         /// <returns>The composite service.</returns>
-        protected abstract ICompositeService Build();
+        public abstract ICompositeService Build();
 
         /// <summary>
         /// Method called when tearing down the container.
         /// </summary>
-        protected virtual void OnContainerTearDown() { }
+        public virtual void OnContainerTearDown() { }
 
         /// <summary>
         /// Method called when initializing the container.
         /// </summary>
-        protected virtual void OnContainerInitialized() { }
+        public virtual void OnContainerInitialized() { }
 
         /// <summary>
         /// Ensures the Docker host is running.
         /// </summary>
-        private void EnsureDockerHost()
+        public void EnsureDockerHost()
         {
-            if (this.dockerHost?.State == ServiceRunningState.Running)
+            if (this.DockerHost?.State == ServiceRunningState.Running)
             {
                 return;
             }
 
             var hosts = new Hosts().Discover();
-            this.dockerHost =
+            this.DockerHost =
                 hosts.FirstOrDefault(x => x.IsNative)
                 ?? hosts.FirstOrDefault(x => x.Name == "default");
 
-            if (this.dockerHost != null)
+            if (this.DockerHost != null)
             {
-                if (this.dockerHost.State != ServiceRunningState.Running)
+                if (this.DockerHost.State != ServiceRunningState.Running)
                 {
-                    this.dockerHost.Start();
+                    this.DockerHost.Start();
                 }
 
                 return;
@@ -107,10 +114,10 @@ namespace Spark.Connect.Test.Common.TestHost
 
             if (hosts.Count > 0)
             {
-                this.dockerHost = hosts.First();
+                this.DockerHost = hosts.First();
             }
 
-            if (this.dockerHost != null)
+            if (this.DockerHost != null)
             {
                 return;
             }

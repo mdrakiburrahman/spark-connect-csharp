@@ -16,7 +16,6 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
     using Ductus.FluentDocker.Model.Compose;
     using Ductus.FluentDocker.Services;
     using Ductus.FluentDocker.Services.Impl;
-
     using Spark.Connect.Test.Common.TestHost;
 
     /// <summary>
@@ -45,7 +44,13 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         }
 
         /// <inheritdoc/>
-        protected override ICompositeService Build()
+        public override void Start()
+        {
+            base.Start();
+        }
+
+        /// <inheritdoc/>
+        public override ICompositeService Build()
         {
             var file = Path.Combine(
                 Directory.GetCurrentDirectory(),
@@ -53,7 +58,7 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
             );
 
             return new DockerComposeCompositeService(
-                this.dockerHost,
+                this.DockerHost,
                 new DockerComposeConfig
                 {
                     ComposeFilePath = new List<string> { file },
@@ -65,12 +70,12 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         }
 
         /// <inheritdoc/>
-        protected override void OnContainerTearDown()
+        public override void OnContainerTearDown()
         {
             if (this.forceKill)
             {
                 Compose.ComposeKill(
-                    host: this.dockerHost?.Host,
+                    host: this.DockerHost?.Host,
                     composeFile: Path.Combine(
                         Directory.GetCurrentDirectory(),
                         (TemplateString)this.composeFilePath
@@ -79,6 +84,12 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
             }
 
             base.OnContainerTearDown();
+        }
+
+        /// <inheritdoc/>
+        public override void OnContainerInitialized()
+        {
+            base.OnContainerInitialized();
         }
     }
 }
