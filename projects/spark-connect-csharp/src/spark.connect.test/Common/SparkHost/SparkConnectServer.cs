@@ -32,6 +32,8 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
 
         private string sparkMasterUri = "http://localhost:4040";
 
+        private int sparkReadinessTimeoutInSeconds = 30;
+
         private bool forceKill = true;
 
         /// <summary>
@@ -92,8 +94,20 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         {
             Task.Run(async () =>
                 {
+                    var startTime = DateTime.Now;
+
                     while (string.IsNullOrEmpty(await this.sparkMasterUri.Wget()))
                     {
+                        if (
+                            (DateTime.Now - startTime).TotalSeconds
+                            > this.sparkReadinessTimeoutInSeconds
+                        )
+                        {
+                            throw new Exception(
+                                $"Timeout: Spark Master Server did not start within {this.sparkReadinessTimeoutInSeconds} seconds."
+                            );
+                        }
+
                         Console.WriteLine("Waiting for Spark Master Server to start...");
                         await Task.Delay(1000);
                     }
