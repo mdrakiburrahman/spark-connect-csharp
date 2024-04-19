@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Ductus.FluentDocker" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="MSTest.TestAdapter" />
     <PackageReference Include="MSTest.TestFramework" />
@@ -45,7 +46,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\SparkEnv\" />
+    <None Update="Common\SparkHost\docker-compose-spark-connect-server.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

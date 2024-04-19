@@ -11,16 +11,23 @@
 
 namespace Spark.Connect.Test.TestSuites.Sanity
 {
+    using Spark.Connect.Test.Common.SparkEnvironment;
+
     /// <summary>
     /// Spark Connect Sanity tests.
     /// </summary>
     [TestClass]
     public class SparkConnectSanityTests
     {
+        private SparkConnectServer sparkConnectServer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SparkConnectSanityTests"/> class.
         /// </summary>
-        public SparkConnectSanityTests() { }
+        public SparkConnectSanityTests()
+        {
+            this.sparkConnectServer = new SparkConnectServer();
+        }
 
         #region Class scoped fixture
 
@@ -63,6 +70,9 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         public void SqlServerDatabaseTestsMethodTeardown()
         {
             Console.WriteLine("Tearing down method scoped fixture");
+
+            // TODO: Put this in the right place, and have a force kill option?
+            this.sparkConnectServer.Dispose();
         }
 
         #endregion Test scoped fixture
