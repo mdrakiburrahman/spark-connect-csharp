@@ -11,6 +11,7 @@
 
 namespace Spark.Connect.Test.Common.SparkEnvironment
 {
+    using Ductus.FluentDocker.Commands;
     using Ductus.FluentDocker.Model.Common;
     using Ductus.FluentDocker.Model.Compose;
     using Ductus.FluentDocker.Services;
@@ -23,17 +24,26 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
     /// </summary>
     public class SparkConnectServer : DockerComposeTestBase
     {
+        private string composeFilePath =
+            "Common/SparkHost/docker-compose-spark-connect-server.yaml";
+
+        private bool forceKill = true;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SparkConnectServer"/> class.
         /// </summary>
-        public SparkConnectServer() { }
+        /// <param name="forceKill">Force kill the container on teardown.</param>
+        public SparkConnectServer(bool forceKill = true)
+        {
+            this.forceKill = forceKill;
+        }
 
         /// <inheritdoc/>
         protected override ICompositeService Build()
         {
             var file = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                (TemplateString)"Common/SparkHost/docker-compose-spark-connect-server.yaml"
+                (TemplateString)this.composeFilePath
             );
 
             return new DockerComposeCompositeService(
@@ -46,6 +56,23 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
                     StopOnDispose = true,
                 }
             );
+        }
+
+        /// <inheritdoc/>
+        protected override void OnContainerTearDown()
+        {
+            if (this.forceKill)
+            {
+                Compose.ComposeKill(
+                    host: this.dockerHost?.Host,
+                    composeFile: Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        (TemplateString)this.composeFilePath
+                    )
+                );
+            }
+
+            base.OnContainerTearDown();
         }
     }
 }

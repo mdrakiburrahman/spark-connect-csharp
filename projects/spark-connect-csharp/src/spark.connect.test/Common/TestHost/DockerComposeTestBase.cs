@@ -111,8 +111,6 @@ namespace Spark.Connect.Test.Common.TestHost
             {
                 return;
             }
-
-            this.EnsureDockerHost();
         }
     }
 }

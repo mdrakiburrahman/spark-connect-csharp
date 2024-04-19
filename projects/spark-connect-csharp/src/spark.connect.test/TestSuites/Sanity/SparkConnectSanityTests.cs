@@ -26,7 +26,7 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         /// </summary>
         public SparkConnectSanityTests()
         {
-            this.sparkConnectServer = new SparkConnectServer();
+            this.sparkConnectServer = new SparkConnectServer(forceKill: true);
         }
 
         #region Class scoped fixture
