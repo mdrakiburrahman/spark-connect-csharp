@@ -30,7 +30,7 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         private string composeFilePath =
             "Common/SparkHost/docker-compose-spark-connect-server.yaml";
 
-        private string sparkMasterUri = "http://localhost:4040";
+        private string sparkMasterUri = "http://host.docker.internal:4040";
 
         private int sparkReadinessTimeoutInSeconds = 30;
 
