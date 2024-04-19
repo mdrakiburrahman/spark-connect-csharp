@@ -12,11 +12,15 @@
 namespace Spark.Connect.Test.Common.SparkEnvironment
 {
     using Ductus.FluentDocker.Commands;
+    using Ductus.FluentDocker.Extensions;
     using Ductus.FluentDocker.Model.Common;
     using Ductus.FluentDocker.Model.Compose;
     using Ductus.FluentDocker.Services;
     using Ductus.FluentDocker.Services.Impl;
+
     using Spark.Connect.Test.Common.TestHost;
+
+    using System.Threading.Tasks;
 
     /// <summary>
     /// A Spark Connect Server.
@@ -25,6 +29,8 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
     {
         private string composeFilePath =
             "Common/SparkHost/docker-compose-spark-connect-server.yaml";
+
+        private string sparkMasterUri = "http://localhost:4040";
 
         private bool forceKill = true;
 
@@ -52,10 +58,10 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         /// <inheritdoc/>
         public override ICompositeService Build()
         {
-            var file = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                (TemplateString)this.composeFilePath
-            );
+            var file = this.GetComposeFile(this.composeFilePath);
+
+            // Clean up any existing containers.
+            this.ForceKill(file);
 
             return new DockerComposeCompositeService(
                 this.DockerHost,
@@ -65,6 +71,7 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
                     ForceRecreate = true,
                     RemoveOrphans = true,
                     StopOnDispose = true,
+                    UseColor = true,
                 }
             );
         }
@@ -74,13 +81,7 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         {
             if (this.forceKill)
             {
-                Compose.ComposeKill(
-                    host: this.DockerHost?.Host,
-                    composeFile: Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        (TemplateString)this.composeFilePath
-                    )
-                );
+                this.ForceKill(this.GetComposeFile(this.composeFilePath));
             }
 
             base.OnContainerTearDown();
@@ -89,7 +90,35 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         /// <inheritdoc/>
         public override void OnContainerInitialized()
         {
+            Task.Run(async () =>
+                {
+                    while (string.IsNullOrEmpty(await this.sparkMasterUri.Wget()))
+                    {
+                        Console.WriteLine("Waiting for Spark Master Server to start...");
+                        await Task.Delay(1000);
+                    }
+                })
+                .Wait();
+
             base.OnContainerInitialized();
+        }
+
+        /// <summary>
+        /// Forces the kill of the Spark Connect Server container.
+        /// </summary>
+        private void ForceKill(string? filePath)
+        {
+            Compose.ComposeKill(host: this.DockerHost?.Host, composeFile: filePath);
+        }
+
+        /// <summary>
+        /// Gets the full path of the compose file.
+        /// </summary>
+        /// <param name="filePath">The relative file path.</param>
+        /// <returns>The full path of the compose file.</returns>
+        private string GetComposeFile(string filePath)
+        {
+            return Path.Combine(Directory.GetCurrentDirectory(), (TemplateString)filePath);
         }
     }
 }

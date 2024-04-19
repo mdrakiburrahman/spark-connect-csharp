@@ -84,6 +84,7 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         [TestMethod]
         public async Task SparkConnectCanConnectAsync()
         {
+            // TODO: Implement test
             await Task.Delay(1000);
             Assert.AreEqual(1, 1);
         }
