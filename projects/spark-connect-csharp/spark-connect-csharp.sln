@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EB38F8A1-86D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "spark.connect.proto", "src\spark.connect.proto\spark.connect.proto.csproj", "{EE4A62FE-E2BE-42CA-A177-A31110154EB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "spark.connect.test", "src\spark.connect.test\spark.connect.test.csproj", "{2E5A2DC5-32B8-4277-B817-B3AADF9110F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +19,17 @@ Global
 		{EE4A62FE-E2BE-42CA-A177-A31110154EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE4A62FE-E2BE-42CA-A177-A31110154EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE4A62FE-E2BE-42CA-A177-A31110154EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E5A2DC5-32B8-4277-B817-B3AADF9110F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E5A2DC5-32B8-4277-B817-B3AADF9110F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E5A2DC5-32B8-4277-B817-B3AADF9110F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E5A2DC5-32B8-4277-B817-B3AADF9110F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EE4A62FE-E2BE-42CA-A177-A31110154EB1} = {EB38F8A1-86DF-4787-AD0A-FD8BF5CC1327}
+		{2E5A2DC5-32B8-4277-B817-B3AADF9110F1} = {EB38F8A1-86DF-4787-AD0A-FD8BF5CC1327}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {052B9F68-B820-4FDE-8DFD-5D979B88D4E2}
