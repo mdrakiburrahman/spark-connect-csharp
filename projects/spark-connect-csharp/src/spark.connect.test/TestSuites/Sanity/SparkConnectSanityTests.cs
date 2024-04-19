@@ -11,6 +11,8 @@
 
 namespace Spark.Connect.Test.TestSuites.Sanity
 {
+    using DotNet.Testcontainers.Builders;
+
     /// <summary>
     /// Spark Connect Sanity tests.
     /// </summary>
@@ -78,9 +80,31 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         /// <summary>
         /// Ensure Spark Connect can connect to the Spark cluster.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [TestMethod]
-        public void SparkConnectCanConnect()
+        public async Task SparkConnectCanConnectAsync()
         {
+            var container = new ContainerBuilder()
+                .WithImage("testcontainers/helloworld:1.1.0")
+                .WithPortBinding(8080, true)
+                .WithWaitStrategy(
+                    Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(r => r.ForPort(8080))
+                )
+                .Build();
+
+            await container.StartAsync().ConfigureAwait(false);
+
+            var httpClient = new HttpClient();
+            var requestUri = new UriBuilder(
+                Uri.UriSchemeHttp,
+                container.Hostname,
+                container.GetMappedPublicPort(8080),
+                "uuid"
+            ).Uri;
+            var guid = await httpClient.GetStringAsync(requestUri).ConfigureAwait(false);
+
+            Console.WriteLine($"Received GUID: {guid}");
+
             Assert.AreEqual(1, 1);
         }
 
