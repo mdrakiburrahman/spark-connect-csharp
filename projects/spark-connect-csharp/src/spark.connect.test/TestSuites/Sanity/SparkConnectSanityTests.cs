@@ -9,17 +9,17 @@
 // </copyright>
 // -----------------------------------------------------------------------------
 
+using Spark.Connect.Test.Common.SparkEnvironment;
+
 namespace Spark.Connect.Test.TestSuites.Sanity
 {
-    using Spark.Connect.Test.Common.SparkEnvironment;
-
     /// <summary>
     /// Spark Connect Sanity tests.
     /// </summary>
     [TestClass]
     public class SparkConnectSanityTests
     {
-        private static SparkConnectServer sparkConnectServer = new SparkConnectServer(
+        private static readonly SparkConnectServer SparkConnectServer = new SparkConnectServer(
             forceKill: true
         );
 
@@ -38,7 +38,7 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         public static void SparkConnectSanityTestsInit(TestContext context)
         {
             Console.WriteLine($"Setting up class scoped fixture for test {context.TestName}");
-            sparkConnectServer.Start();
+            SparkConnectServer.Start();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         public static void SqlServerDatabaseTestsClassTeardown()
         {
             Console.WriteLine("Tearing down class scoped fixture");
-            sparkConnectServer.Dispose();
+            SparkConnectServer.Dispose();
         }
 
         #endregion Class scoped fixture

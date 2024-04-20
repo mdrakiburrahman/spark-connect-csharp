@@ -9,32 +9,30 @@
 // </copyright>
 // -----------------------------------------------------------------------------
 
+using Ductus.FluentDocker.Commands;
+using Ductus.FluentDocker.Extensions;
+using Ductus.FluentDocker.Model.Common;
+using Ductus.FluentDocker.Model.Compose;
+using Ductus.FluentDocker.Services;
+using Ductus.FluentDocker.Services.Impl;
+
+using Spark.Connect.Test.Common.TestHost;
+
 namespace Spark.Connect.Test.Common.SparkEnvironment
 {
-    using Ductus.FluentDocker.Commands;
-    using Ductus.FluentDocker.Extensions;
-    using Ductus.FluentDocker.Model.Common;
-    using Ductus.FluentDocker.Model.Compose;
-    using Ductus.FluentDocker.Services;
-    using Ductus.FluentDocker.Services.Impl;
-
-    using Spark.Connect.Test.Common.TestHost;
-
-    using System.Threading.Tasks;
-
     /// <summary>
     /// A Spark Connect Server.
     /// </summary>
     public class SparkConnectServer : DockerComposeTestBase
     {
-        private string composeFilePath =
+        private readonly string composeFilePath =
             "Common/SparkHost/docker-compose-spark-connect-server.yaml";
 
-        private string sparkMasterUri = "http://host.docker.internal:4040";
+        private readonly string sparkMasterUri = "http://host.docker.internal:4040";
 
-        private int sparkReadinessTimeoutInSeconds = 30;
+        private readonly int sparkReadinessTimeoutInSeconds = 60;
 
-        private bool forceKill = true;
+        private readonly bool forceKill;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SparkConnectServer"/> class.
@@ -48,6 +46,7 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         /// <inheritdoc/>
         public override void Dispose()
         {
+            GC.SuppressFinalize(this);
             base.Dispose();
         }
 
@@ -60,7 +59,7 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         /// <inheritdoc/>
         public override ICompositeService Build()
         {
-            var file = this.GetComposeFile(this.composeFilePath);
+            var file = GetComposeFile(this.composeFilePath);
 
             // Clean up any existing containers.
             this.ForceKill(file);
@@ -83,7 +82,7 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         {
             if (this.forceKill)
             {
-                this.ForceKill(this.GetComposeFile(this.composeFilePath));
+                this.ForceKill(GetComposeFile(this.composeFilePath));
             }
 
             base.OnContainerTearDown();
@@ -118,21 +117,21 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
         }
 
         /// <summary>
-        /// Forces the kill of the Spark Connect Server container.
-        /// </summary>
-        private void ForceKill(string? filePath)
-        {
-            Compose.ComposeKill(host: this.DockerHost?.Host, composeFile: filePath);
-        }
-
-        /// <summary>
         /// Gets the full path of the compose file.
         /// </summary>
         /// <param name="filePath">The relative file path.</param>
         /// <returns>The full path of the compose file.</returns>
-        private string GetComposeFile(string filePath)
+        private static string GetComposeFile(string filePath)
         {
             return Path.Combine(Directory.GetCurrentDirectory(), (TemplateString)filePath);
+        }
+
+        /// <summary>
+        /// Forces the kill of the Spark Connect Server container.
+        /// </summary>
+        private void ForceKill(string? filePath)
+        {
+            this.DockerHost?.Host.ComposeKill(composeFile: filePath);
         }
     }
 }

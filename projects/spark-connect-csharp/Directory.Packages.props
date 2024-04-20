@@ -28,7 +28,8 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageVersion Include="MSTest.TestAdapter" Version="3.1.1" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.1.1" />
-    <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
+    <!-- We have to use the beta, because StyleCop stable doesn't recognize Records: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/3213#issuecomment-725780613 /> -->
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
     <PackageVersion Include="Testcontainers" Version="3.8.0" />
   </ItemGroup>
 </Project>

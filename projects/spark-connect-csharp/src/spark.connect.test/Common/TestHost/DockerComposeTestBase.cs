@@ -9,10 +9,10 @@
 // </copyright>
 // -----------------------------------------------------------------------------
 
+using Ductus.FluentDocker.Services;
+
 namespace Spark.Connect.Test.Common.TestHost
 {
-    using Ductus.FluentDocker.Services;
-
     /// <summary>
     /// Abstract class for Docker Compose tests.
     /// </summary>
@@ -31,7 +31,7 @@ namespace Spark.Connect.Test.Common.TestHost
         /// <summary>
         /// Initializes a new instance of the <see cref="DockerComposeTestBase"/> class.
         /// </summary>
-        public DockerComposeTestBase()
+        protected DockerComposeTestBase()
         {
             this.EnsureDockerHost();
             this.CompositeService = this.Build();
@@ -40,6 +40,7 @@ namespace Spark.Connect.Test.Common.TestHost
         /// <inheritdoc/>
         public virtual void Dispose()
         {
+            GC.SuppressFinalize(this);
             this.OnContainerTearDown();
             var compositeService = this.CompositeService;
             this.CompositeService = null!;
@@ -114,7 +115,7 @@ namespace Spark.Connect.Test.Common.TestHost
 
             if (hosts.Count > 0)
             {
-                this.DockerHost = hosts.First();
+                this.DockerHost = hosts[0];
             }
 
             if (this.DockerHost != null)
