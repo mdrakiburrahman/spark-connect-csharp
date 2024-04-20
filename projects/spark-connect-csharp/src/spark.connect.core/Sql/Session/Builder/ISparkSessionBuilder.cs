@@ -17,13 +17,6 @@ namespace Spark.Connect.Core.Sql.Session.Builder
     public interface ISparkSessionBuilder
     {
         /// <summary>
-        /// Sets the remote connection string for the Spark Session.
-        /// </summary>
-        /// <param name="connectionString">The remote connection string.</param>
-        /// <returns>The current instance of the ISparkSessionBuilder.</returns>
-        ISparkSessionBuilder Remote(string connectionString);
-
-        /// <summary>
         /// Builds the Spark Session.
         /// </summary>
         /// <returns>The built Spark Session.</returns>
