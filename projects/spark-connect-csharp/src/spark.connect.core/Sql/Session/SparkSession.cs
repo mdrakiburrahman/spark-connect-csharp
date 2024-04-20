@@ -72,5 +72,38 @@ namespace Spark.Connect.Core.Sql.Session
             // Not implemented in spark-connect-go either.
             return;
         }
+
+        /// <summary>
+        /// Analyzes the execution plan of a Spark SQL query.
+        /// </summary>
+        /// <param name="plan">The execution plan to analyze.</param>
+        /// <returns>The response containing the analyzed plan.</returns>
+        internal AnalyzePlanResponse AnalyzePlan(Plan plan)
+        {
+            var request = new AnalyzePlanRequest
+            {
+                SessionId = this.SessionId,
+                Schema = new AnalyzePlanRequest.Types.Schema { Plan = plan, },
+                UserContext = new UserContext { UserId = "na", },
+            };
+
+            var headers = new Metadata();
+            foreach (var entry in this.Metadata)
+            {
+                headers.Add(entry.Key, entry.Value);
+            }
+
+            var callOptions = new CallOptions(headers);
+
+            try
+            {
+                var response = this.Client.AnalyzePlan(request, callOptions);
+                return response;
+            }
+            catch (RpcException e)
+            {
+                throw new Exception($"Failed to call AnalyzePlan in session {this.SessionId}", e);
+            }
+        }
     }
 }
