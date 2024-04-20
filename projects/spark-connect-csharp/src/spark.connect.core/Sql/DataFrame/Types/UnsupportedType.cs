@@ -14,8 +14,14 @@ namespace Spark.Connect.Core.Sql.DataFrame.Types
     /// <summary>
     /// Represents an Unsupported data type in a DataFrame.
     /// </summary>
-    public class UnsupportedType : IDataType
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="UnsupportedType"/> class.
+    /// </remarks>
+    /// <param name="typeInfo">The unsupported type info.</param>
+    public class UnsupportedType(object typeInfo) : IDataType
     {
+        private object TypeInfo { get; set; } = typeInfo;
+
         /// <summary>
         /// Gets the name of the Unsupported type.
         /// </summary>
