@@ -11,8 +11,6 @@
 
 using Grpc.Core;
 
-using Spark.Connect.Core.Channel.Auth;
-
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
