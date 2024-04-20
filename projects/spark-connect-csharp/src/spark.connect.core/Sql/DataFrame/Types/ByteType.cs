@@ -1,20 +1,25 @@
 // -----------------------------------------------------------------------------
 // <summary>
-// A structured data type.
+// A Byte Type.
 // </summary>
 //
-// <copyright file="StructType.cs" company="Apache Software Foundation (ASF)">
+// <copyright file="ByteType.cs" company="Apache Software Foundation (ASF)">
 // Copyright (c) Apache Software Foundation (ASF). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------------
 
-using Spark.Connect.Core.Sql.DataFrame.Fields;
-
 namespace Spark.Connect.Core.Sql.DataFrame.Types
 {
     /// <summary>
-    /// Represents a structured data type.
+    /// Represents a Byte data type in a DataFrame.
     /// </summary>
-    public record StructType(string TypeName, StructField[] Fields);
+    public class ByteType : IDataType
+    {
+        /// <summary>
+        /// Gets the name of the Byte type.
+        /// </summary>
+        /// <returns>The name of the Byte type.</returns>
+        public string TypeName() => nameof(ByteType).Replace("Type", string.Empty);
+    }
 }

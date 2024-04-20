@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------------------
 
-namespace Spark.Connect.Core.Sql.DataFrame.Types
+namespace Spark.Connect.Core.Sql.DataFrame.Columns
 {
     /// <summary>
     /// Represents a column used for range partitioning.

@@ -9,10 +9,11 @@
 // </copyright>
 // -----------------------------------------------------------------------------
 
+using Spark.Connect.Core.Sql.DataFrame.Columns;
 using Spark.Connect.Core.Sql.DataFrame.Exceptions;
+using Spark.Connect.Core.Sql.DataFrame.Rows;
 using Spark.Connect.Core.Sql.DataFrame.Types;
 using Spark.Connect.Core.Sql.DataFrame.Writer;
-using Spark.Connect.Core.Sql.Row;
 
 namespace Spark.Connect.Core.Sql.DataFrame
 {

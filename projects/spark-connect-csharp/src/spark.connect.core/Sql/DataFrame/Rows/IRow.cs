@@ -11,7 +11,7 @@
 
 using Spark.Connect.Core.Sql.DataFrame.Types;
 
-namespace Spark.Connect.Core.Sql.Row
+namespace Spark.Connect.Core.Sql.DataFrame.Rows
 {
     /// <summary>
     /// Represents a row in a data frame.
