@@ -56,8 +56,7 @@ namespace Spark.Connect.Core.Sql.Session
         /// <inheritdoc/>
         public IDataFrameReader Read()
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            return new DataFrameReader(this);
         }
 
         /// <inheritdoc/>
@@ -70,8 +69,8 @@ namespace Spark.Connect.Core.Sql.Session
         /// <inheritdoc/>
         public void Stop()
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            // Not implemented in spark-connect-go either.
+            return;
         }
     }
 }

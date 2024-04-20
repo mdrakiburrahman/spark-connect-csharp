@@ -28,7 +28,7 @@ namespace Spark.Connect.Core.Sql.DataFrame.Reader
         /// </summary>
         /// <param name="sparkSession">The Spark Session.</param>
         /// <param name="formatSource">The Format Source.</param>
-        public DataFrameReader(SparkSession sparkSession, string formatSource)
+        public DataFrameReader(SparkSession sparkSession, string formatSource = "")
         {
             this.sparkSession = sparkSession;
             this.formatSource = formatSource;
