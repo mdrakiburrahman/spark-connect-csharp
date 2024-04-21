@@ -136,13 +136,13 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         /// <param name="e">Thrown exception type.</param>
         [TestMethod]
         [DataRow(
-            "select 'apple' as word, 123 as count union all select 'orange' as word, 456 as count",
+            "SELECT 'apple' as word, 123 as count UNION ALL SELECT 'orange' as word, 456 as count",
             new string[] { "orange", "456", "apple", "123" },
             false,
             null
         )]
         [DataRow(
-            "select 'potato' as word, 999999999 as count union all select 'tomato' as word, 0 as count",
+            "SELECT 'potato' as word, 999999999 as count UNION ALL SELECT 'tomato' as word, 0 as count",
             new string[] { "potato", "999999999", "tomato", "0" },
             false,
             null
@@ -200,9 +200,20 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         /// <param name="expectedDataTypes">The expected data types.</param>
         [TestMethod]
         [DataRow(
-            "select 'apple' as word, 123 as count union all select 'orange' as word, 456 as count",
+            "SELECT 'apple' as word, 123 as count UNION ALL SELECT 'orange' as word, 456 as count",
             new string[] { "word", "count" },
             new string[] { "StringType", "IntegerType" }
+        )]
+        [DataRow(
+            @"SELECT 
+                true AS is_fruit, 
+                123 AS fruit_id, 
+                CURRENT_TIMESTAMP() AS purchase_timestamp,
+                'apple' AS fruit_name, 
+                9999999929299292 AS num_purchases, 
+                3.487947484763867328929829272 AS price",
+            new string[] { "is_fruit", "fruit_id", "purchase_timestamp", "fruit_name", "num_purchases", "price" },
+            new string[] { "BooleanType", "IntegerType", "TimestampType", "StringType", "LongType", "DecimalType" }
         )]
         public void TestSparkSchemaReturnsAsExpected(string query, string[] expectedColumnNames, string[] expectedDataTypes)
         {
