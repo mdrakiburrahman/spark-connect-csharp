@@ -124,11 +124,15 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         /// <summary>
         /// Asserts query can run.
         /// </summary>
+        /// <param name="query">The query to run.</param>
+        /// <param name="shouldThrow">Should throw during initialization.</param>
+        /// <param name="e">Thrown exception type.</param>
         [TestMethod]
-        public void TestSparkQueryCanRunAsExpected()
+        [DataRow("select 'apple' as word, 123 as count union all select 'orange' as word, 456 as count", false, null)]
+        public void TestSparkQueryCanRunAsExpected(string query, bool shouldThrow, string e)
         {
             var spark = this.CreateSparkSession();
-            var df = spark.Sql("select 'apple' as word, 123 as count union all select 'orange' as word, 456 as count");
+            var df = spark.Sql(query);
             df.Show();
         }
 
