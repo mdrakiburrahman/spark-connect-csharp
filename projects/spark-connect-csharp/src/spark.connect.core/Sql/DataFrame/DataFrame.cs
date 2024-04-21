@@ -89,7 +89,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
         {
             try
             {
-                var response = this.sparkSession.AnalyzePlan(this.CreateReadPlan());
+                var response = this.sparkSession.AnalyzePlan(this.CreatePlan());
                 var responseSchema = response.Schema.Schema_;
                 var result = this.ConvertProtoDataTypeToStructType(responseSchema);
                 return result;
@@ -105,7 +105,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
         {
             try
             {
-                var responseClient = this.sparkSession.ExecutePlan(this.CreateReadPlan());
+                var responseClient = this.sparkSession.ExecutePlan(this.CreatePlan());
                 Spark.Connect.Core.Sql.DataFrame.Types.StructType? schema = default;
                 var allRows = new List<IRow>();
 
@@ -487,15 +487,11 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// Creates a read plan for the DataFrame.
         /// </summary>
         /// <returns>The created read plan.</returns>
-        private Plan CreateReadPlan()
+        private Plan CreatePlan()
         {
             return new Plan
             {
-                Root = new Relation
-                {
-                    Common = new RelationCommon { PlanId = PlanIdGenerator.NewPlanId(), },
-                    Read = new Read { DataSource = this.relation.Read.DataSource, },
-                },
+                Root = this.relation,
             };
         }
 

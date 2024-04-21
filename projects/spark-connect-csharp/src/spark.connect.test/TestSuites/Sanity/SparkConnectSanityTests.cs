@@ -63,7 +63,7 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         /// This method runs on per Test Method spinup.
         /// </summary>
         [TestInitialize]
-        public void SqlServerDatabaseTestsMethodInit()
+        public void SparkConnectSanityTestsMethodInit()
         {
             Console.WriteLine("Setting up method scoped fixture");
         }
@@ -72,7 +72,7 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         /// This method runs on per Test Method teardown.
         /// </summary>
         [TestCleanup]
-        public void SqlServerDatabaseTestsMethodTeardown()
+        public void SparkConnectSanityTestsMethodTeardown()
         {
             Console.WriteLine("Tearing down method scoped fixture");
         }
@@ -147,12 +147,7 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             false,
             null
         )]
-        [DataRow(
-            "foo",
-            null,
-            true,
-            "AggregateException"
-        )]
+        [DataRow("foo", null, true, "AggregateException")]
         public void TestSparkQueryCanRunAsExpected(
             string query,
             string[] expectedOutputs,
@@ -171,14 +166,10 @@ namespace Spark.Connect.Test.TestSuites.Sanity
                 switch (e)
                 {
                     case "AggregateException":
-                        Assert.ThrowsException<AggregateException>(
-                            () => spark.Sql(query)
-                        );
+                        Assert.ThrowsException<AggregateException>(() => spark.Sql(query));
                         break;
                     default:
-                        Assert.ThrowsException<ArgumentException>(
-                            () => spark.Sql(query)
-                        );
+                        Assert.ThrowsException<ArgumentException>(() => spark.Sql(query));
                         break;
                 }
             }
@@ -198,6 +189,39 @@ namespace Spark.Connect.Test.TestSuites.Sanity
                 // Clean up
                 //
                 Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
+            }
+        }
+
+        /// <summary>
+        /// Asserts queries return expected results.
+        /// </summary>
+        /// <param name="query">The query to run.</param>
+        /// <param name="expectedColumnNames">The expected column names.</param>
+        /// <param name="expectedDataTypes">The expected data types.</param>
+        [TestMethod]
+        [DataRow(
+            "select 'apple' as word, 123 as count union all select 'orange' as word, 456 as count",
+            new string[] { "word", "count" },
+            new string[] { "StringType", "IntegerType" }
+        )]
+        public void TestSparkSchemaReturnsAsExpected(string query, string[] expectedColumnNames, string[] expectedDataTypes)
+        {
+            // Setup
+            //
+            var spark = this.CreateSparkSession();
+            var df = spark.Sql(query);
+
+            // Exercise
+            //
+            var schema = df.Schema();
+
+            // Loop and print each column name and type
+            //
+            for (int i = 0; i < expectedColumnNames.Length; i++)
+            {
+                var field = schema.Fields.FirstOrDefault(f => f.Name == expectedColumnNames[i]);
+                Assert.IsNotNull(field, $"Field {expectedColumnNames[i]} not found in schema.");
+                Assert.AreEqual($"Spark.Connect.Core.Sql.DataFrame.Types.{expectedDataTypes[i]}", field.DataType.ToString());
             }
         }
 
