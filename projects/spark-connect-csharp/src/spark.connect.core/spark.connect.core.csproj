@@ -7,7 +7,7 @@
     <CodeAnalysisRuleSet>..\..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>Apache.Spark.Connect</PackageId>
-    <Version>0.1.0-alpha</Version>
+    <Version>0.1.2-alpha</Version>
     <Authors>Raki Rahman</Authors>
     <Product>SparkConnect</Product>
     <Description>Apache Spark Connect Client for C#.</Description>
