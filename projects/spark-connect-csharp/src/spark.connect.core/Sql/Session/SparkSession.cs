@@ -62,8 +62,44 @@ namespace Spark.Connect.Core.Sql.Session
         /// <inheritdoc/>
         public IDataFrame Sql(string query)
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            var plan = new Plan
+            {
+                Command = new Command { SqlCommand = new SqlCommand { Sql = query, }, },
+            };
+
+            AsyncServerStreamingCall<ExecutePlanResponse> responseClient;
+            try
+            {
+                responseClient = this.ExecutePlan(plan);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Failed to execute sql: {query}", e);
+            }
+
+            while (true)
+            {
+                try
+                {
+                    var response = responseClient.ResponseStream.Current;
+                    var sqlCommandResult = response.SqlCommandResult;
+                    if (sqlCommandResult == null)
+                    {
+                        continue;
+                    }
+
+                    return new Spark.Connect.Core.Sql.DataFrame.DataFrame(
+                        this,
+                        sqlCommandResult.Relation
+                    );
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Failed to receive ExecutePlan response", e);
+                }
+            }
+
+            throw new Exception("Failed to get SqlCommandResult in ExecutePlan response");
         }
 
         /// <inheritdoc/>
