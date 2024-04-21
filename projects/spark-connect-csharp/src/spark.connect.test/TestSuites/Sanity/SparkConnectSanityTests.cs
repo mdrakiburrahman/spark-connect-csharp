@@ -122,11 +122,28 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         }
 
         /// <summary>
+        /// Asserts query can run.
+        /// </summary>
+        [TestMethod]
+        public void TestSparkQueryCanRunAsExpected()
+        {
+            var spark = this.CreateSparkSession();
+            var df = spark.Sql("select 'apple' as word, 123 as count union all select 'orange' as word, 456 as count");
+            df.Show();
+        }
+
+        /// <summary>
         /// Creates a new instance of the Spark session.
         /// </summary>
+        /// <param name="url">The Spark Connect Server url.</param>
         /// <returns>The Spark session.</returns>
-        private ISparkSession CreateSparkSession(string url)
+        private ISparkSession CreateSparkSession(string url = "")
         {
+            if (string.IsNullOrEmpty(url))
+            {
+                return new SparkSessionBuilder(SparkConnectServer.SparkConnectUri).Build();
+            }
+
             return new SparkSessionBuilder(url).Build();
         }
 

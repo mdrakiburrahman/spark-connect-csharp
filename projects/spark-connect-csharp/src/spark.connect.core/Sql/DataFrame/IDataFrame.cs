@@ -28,7 +28,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <param name="numRows">The number of rows to show.</param>
         /// <param name="truncate">Whether to truncate long strings when printing.</param>
         /// <exception cref="DataFrameShowException">Thrown when an error occurs while showing the data frame.</exception>
-        void Show(int numRows, bool truncate);
+        void Show(int numRows = 20, bool truncate = false);
 
         /// <summary>
         /// Returns the schema for the current data frame.
