@@ -85,16 +85,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
         {
             try
             {
-                var response = this.sparkSession.AnalyzePlan(
-                    new Plan
-                    {
-                        Root = new Relation
-                        {
-                            Common = new RelationCommon { PlanId = PlanIdGenerator.NewPlanId(), },
-                            Read = new Read { DataSource = this.relation.Read.DataSource, },
-                        },
-                    }
-                );
+                var response = this.sparkSession.AnalyzePlan(this.CreateReadPlan());
                 var responseSchema = response.Schema.Schema_;
                 var result = this.ConvertProtoDataTypeToStructType(responseSchema);
                 return result;
@@ -108,8 +99,46 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <inheritdoc/>
         public IRow[] Collect()
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            try
+            {
+                var responseClient = this.sparkSession.ExecutePlan(this.CreateReadPlan());
+                Spark.Connect.Core.Sql.DataFrame.Types.StructType? schema = default;
+                var allRows = new List<IRow>();
+
+                while (true)
+                {
+                    var response = responseClient.ResponseStream.Current;
+                    if (response == null)
+                    {
+                        return allRows.ToArray();
+                    }
+
+                    var dataType = response.Schema;
+                    if (dataType != null)
+                    {
+                        schema = this.ConvertProtoDataTypeToStructType(dataType);
+                        continue;
+                    }
+
+                    var arrowBatch = response.ArrowBatch;
+                    if (arrowBatch == null)
+                    {
+                        continue;
+                    }
+
+                    var rowBatch = this.ReadArrowBatchData(arrowBatch.Data.ToByteArray(), schema);
+                    if (rowBatch == null)
+                    {
+                        throw new Exception("Failed to read arrow batch data");
+                    }
+
+                    allRows.AddRange(rowBatch);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to execute plan: {ex.Message}", ex);
+            }
         }
 
         /// <inheritdoc/>
@@ -389,6 +418,22 @@ namespace Spark.Connect.Core.Sql.DataFrame
             }
         }
 
-        #endregion Protobuf to Spark Data Type Conversion Private Methods
+        /// <summary>
+        /// Creates a read plan for the DataFrame.
+        /// </summary>
+        /// <returns>The created read plan.</returns>
+        private Plan CreateReadPlan()
+        {
+            return new Plan
+            {
+                Root = new Relation
+                {
+                    Common = new RelationCommon { PlanId = PlanIdGenerator.NewPlanId(), },
+                    Read = new Read { DataSource = this.relation.Read.DataSource, },
+                },
+            };
+        }
+
+        #endregion Plan Creation Private Methods
     }
 }
