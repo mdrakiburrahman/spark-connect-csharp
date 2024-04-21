@@ -40,6 +40,8 @@ namespace Spark.Connect.Core.Sql.DataFrame
             this.relation = relation;
         }
 
+        #region IDataFrame Implementation
+
         /// <inheritdoc/>
         public void Show(int numRows, bool truncate)
         {
@@ -118,6 +120,10 @@ namespace Spark.Connect.Core.Sql.DataFrame
             // TODO: Implement
             throw new System.NotImplementedException();
         }
+
+        #endregion IDataFrame Implementation
+
+        #region Arrow Data Access Private Methods
 
         /// <summary>
         /// Shows the data in an Arrow batch.
@@ -264,6 +270,10 @@ namespace Spark.Connect.Core.Sql.DataFrame
             }
         }
 
+        #endregion Arrow Data Access Private Methods
+
+        #region Protobuf to Spark Data Type Conversion Private Methods
+
         /// <summary>
         /// Converts the given Proto struct type to a corresponding StructType in the DataFrame.
         /// </summary>
@@ -359,5 +369,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
                     );
             }
         }
+
+        #endregion Protobuf to Spark Data Type Conversion Private Methods
     }
 }
