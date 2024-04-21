@@ -29,6 +29,9 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             forceKill: true
         );
 
+        private static readonly string DemoQuery =
+            "SELECT 'apple' as word, 123 as count UNION ALL SELECT 'orange' as word, 456 as count";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SparkConnectSanityTests"/> class.
         /// </summary>
@@ -323,6 +326,42 @@ namespace Spark.Connect.Test.TestSuites.Sanity
                     Assert.AreEqual(expectedRows[i][j], values[j].ToString());
                 }
             }
+        }
+
+        /// <summary>
+        /// Asserts DataFrame writes can be read as expected.
+        /// </summary>
+        [TestMethod]
+        public void TestDataFrameWriteReadAsExpected()
+        {
+            // Setup
+            //
+            var sampleFile = "file:///tmp/spark-connect-write-example-output.parquet";
+            var expectedOutputs = new string[] { "apple", "123", "orange", "456" };
+
+            var spark = this.CreateSparkSession();
+            var inMemDf = spark.Sql(DemoQuery);
+
+            // Exercise
+            //
+            inMemDf.Write().Mode("overwrite").Format("parquet").Save(sampleFile);
+
+            // Verify
+            //
+            var storageDf = spark.Read().Format("parquet").Load(sampleFile);
+            var consoleOutput = new StringWriter();
+            Console.SetOut(consoleOutput);
+
+            storageDf.Show();
+
+            // Verify
+            //
+            var output = consoleOutput.ToString();
+            Assert.IsTrue(expectedOutputs.All(o => output.Contains(o)));
+
+            // Clean up
+            //
+            Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
         }
 
         /// <summary>

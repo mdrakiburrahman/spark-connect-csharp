@@ -9,7 +9,10 @@
 // </copyright>
 // -----------------------------------------------------------------------------
 
+using Spark.Connect.Core.Channel.Extension;
 using Spark.Connect.Core.Sql.Session;
+
+using static Spark.Connect.WriteOperation.Types;
 
 namespace Spark.Connect.Core.Sql.DataFrame.Writer
 {
@@ -24,13 +27,13 @@ namespace Spark.Connect.Core.Sql.DataFrame.Writer
     /// <param name="saveMode">The save mode.</param>
     /// <param name="formatSource">The format source.</param>
     public class DataFrameWriter(
-        ISparkSession sparkSession,
+        SparkSession sparkSession,
         Relation relation,
         string saveMode = "",
         string formatSource = ""
         ) : IDataFrameWriter
     {
-        private readonly ISparkSession sparkSession = sparkSession;
+        private readonly SparkSession sparkSession = sparkSession;
         private readonly Relation relation = relation;
         private string saveMode = saveMode;
         private string formatSource = formatSource;
@@ -52,7 +55,44 @@ namespace Spark.Connect.Core.Sql.DataFrame.Writer
         /// <inheritdoc/>
         public void Save(string path)
         {
-            throw new NotImplementedException();
+            SaveMode saveMode;
+            try
+            {
+                saveMode = GetSaveMode(this.saveMode);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting save mode", ex);
+            }
+
+            string? source = null;
+            if (!string.IsNullOrEmpty(this.formatSource))
+            {
+                source = this.formatSource;
+            }
+
+            var plan = new Plan
+            {
+                Command = new Command
+                {
+                    WriteOperation = new WriteOperation
+                    {
+                        Input = this.relation,
+                        Mode = saveMode,
+                        Source = source,
+                        Path = path,
+                    },
+                },
+            };
+
+            try
+            {
+                this.sparkSession.ExecutePlan(plan).ExecuteRpc();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error consuming execute plan client", ex);
+            }
         }
 
         /// <summary>
@@ -62,13 +102,13 @@ namespace Spark.Connect.Core.Sql.DataFrame.Writer
         /// <returns>The save mode.</returns>
         private static WriteOperation.Types.SaveMode GetSaveMode(string mode)
         {
-            return mode switch
+            return mode.ToLower() switch
             {
                 "" => WriteOperation.Types.SaveMode.Unspecified,
-                "Append" => WriteOperation.Types.SaveMode.Append,
-                "Overwrite" => WriteOperation.Types.SaveMode.Overwrite,
-                "ErrorIfExists" => WriteOperation.Types.SaveMode.ErrorIfExists,
-                "Ignore" => WriteOperation.Types.SaveMode.Ignore,
+                "append" => WriteOperation.Types.SaveMode.Append,
+                "overwrite" => WriteOperation.Types.SaveMode.Overwrite,
+                "errorifexists" => WriteOperation.Types.SaveMode.ErrorIfExists,
+                "ignore" => WriteOperation.Types.SaveMode.Ignore,
                 _ => throw new ArgumentException($"Unsupported save mode: {mode}"),
             };
         }
