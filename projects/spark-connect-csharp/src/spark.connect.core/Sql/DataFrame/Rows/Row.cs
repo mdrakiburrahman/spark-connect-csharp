@@ -19,24 +19,24 @@ namespace Spark.Connect.Core.Sql.DataFrame.Rows
     public class Row : IRow
     {
         private readonly object[] values;
-        private readonly StructType schema;
+        private readonly StructType? schema;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Row"/> class.
         /// </summary>
         /// <param name="values">The values of the row.</param>
         /// <param name="schema">The schema of the row.</param>
-        public Row(object[] values, StructType schema)
+        public Row(object[] values, StructType? schema)
         {
-            this.values = values ?? throw new ArgumentNullException(nameof(values));
-            this.schema = schema ?? throw new ArgumentNullException(nameof(schema));
+            this.values = values;
+            this.schema = schema;
         }
 
         /// <summary>
         /// Gets the schema of the row.
         /// </summary>
         /// <returns>The schema of the row.</returns>
-        public StructType Schema() => this.schema;
+        public StructType? Schema() => this.schema;
 
         /// <summary>
         /// Gets the values of the row.

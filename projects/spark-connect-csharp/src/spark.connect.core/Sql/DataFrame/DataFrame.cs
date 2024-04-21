@@ -15,7 +15,6 @@ using Apache.Arrow.Types;
 
 using Spark.Connect.Core.Sql.DataFrame.Columns;
 using Spark.Connect.Core.Sql.DataFrame.Rows;
-using Spark.Connect.Core.Sql.DataFrame.Types;
 using Spark.Connect.Core.Sql.DataFrame.Writer;
 using Spark.Connect.Core.Sql.Session;
 
@@ -149,10 +148,54 @@ namespace Spark.Connect.Core.Sql.DataFrame
             }
         }
 
+        /// <summary>
+        /// Reads the data from an Arrow batch and converts it into a list of rows.
+        /// </summary>
+        /// <param name="data">The byte array representing the Arrow batch.</param>
+        /// <param name="schema">The schema of the data.</param>
+        /// <returns>A list of rows.</returns>
         private List<Row> ReadArrowBatchData(byte[] data, StructType? schema)
         {
-            // TODO: Implement
-            throw new NotImplementedException();
+            var reader = new ArrowStreamReader(new MemoryStream(data));
+            var rows = new List<Row>();
+            RecordBatch recordBatch;
+
+            while ((recordBatch = reader.ReadNextRecordBatch()) != null)
+            {
+                var values = this.ReadArrowRecord(recordBatch);
+
+                foreach (var v in values)
+                {
+                    var row = new Row(v, schema);
+                    rows.Add(row);
+                }
+            }
+
+            return rows;
+        }
+
+        /// <summary>
+        /// Reads the value of a column from an Arrow record batch.
+        /// </summary>
+        /// <param name="record">The Arrow record batch.</param>
+        /// <returns>The array of column values.</returns>
+        private object[][] ReadArrowRecord(RecordBatch record)
+        {
+            int numRows = record.Length;
+            int numColumns = record.Schema.FieldsList.Count;
+
+            var values = new object[numRows][];
+            for (int i = 0; i < numRows; i++)
+            {
+                values[i] = new object[numColumns];
+            }
+
+            for (int columnIndex = 0; columnIndex < numColumns; columnIndex++)
+            {
+                this.ReadArrowRecordColumn(record, columnIndex, values);
+            }
+
+            return values;
         }
 
         /// <summary>

@@ -22,7 +22,7 @@ namespace Spark.Connect.Core.Sql.DataFrame.Rows
         /// Returns the schema for the row.
         /// </summary>
         /// <returns>The schema for the row.</returns>
-        StructType Schema();
+        StructType? Schema();
 
         /// <summary>
         /// Returns the values of the row.
