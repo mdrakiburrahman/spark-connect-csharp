@@ -55,7 +55,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <param name="replace">Whether to replace the existing view with the same name.</param>
         /// <param name="global">Whether the view is global.</param>
         /// <exception cref="TemporaryViewException">Thrown when an error occurs creating or updating a temporary view.</exception>
-        void CreateTempView(string viewName, bool replace, bool global);
+        void CreateTempView(string viewName, bool replace = true, bool global = false);
 
         /// <summary>
         /// Re-partitions a data frame.

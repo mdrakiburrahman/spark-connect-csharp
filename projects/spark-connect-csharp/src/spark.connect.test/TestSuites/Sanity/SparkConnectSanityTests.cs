@@ -32,6 +32,14 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         private static readonly string DemoQuery =
             "SELECT 'apple' as word, 123 as count UNION ALL SELECT 'orange' as word, 456 as count";
 
+        private static readonly string[] DemoQueryExpectedOutputs = new string[]
+        {
+            "apple",
+            "123",
+            "orange",
+            "456",
+        };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SparkConnectSanityTests"/> class.
         /// </summary>
@@ -337,7 +345,6 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             // Setup
             //
             var sampleFile = "file:///tmp/spark-connect-write-example-output.parquet";
-            var expectedOutputs = new string[] { "apple", "123", "orange", "456" };
 
             var spark = this.CreateSparkSession();
             var inMemDf = spark.Sql(DemoQuery);
@@ -357,7 +364,40 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             // Verify
             //
             var output = consoleOutput.ToString();
-            Assert.IsTrue(expectedOutputs.All(o => output.Contains(o)));
+            Assert.IsTrue(DemoQueryExpectedOutputs.All(o => output.Contains(o)));
+
+            // Clean up
+            //
+            Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
+        }
+
+        /// <summary>
+        /// Asserts Temporary Views can be read as expected.
+        /// </summary>
+        [TestMethod]
+        public void TestTempViewReadAsExpected()
+        {
+            // Setup
+            //
+            var spark = this.CreateSparkSession();
+            var inMemDf = spark.Sql(DemoQuery);
+
+            // Exercise
+            //
+            inMemDf.CreateTempView("fruit_sales");
+
+            // Verify
+            //
+            var tempViewDf = spark.Sql("select count, word from fruit_sales order by count");
+            var consoleOutput = new StringWriter();
+            Console.SetOut(consoleOutput);
+
+            tempViewDf.Show();
+
+            // Verify
+            //
+            var output = consoleOutput.ToString();
+            Assert.IsTrue(DemoQueryExpectedOutputs.All(o => output.Contains(o)));
 
             // Clean up
             //
