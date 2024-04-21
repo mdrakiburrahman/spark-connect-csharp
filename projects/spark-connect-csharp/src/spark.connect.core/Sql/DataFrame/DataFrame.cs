@@ -20,6 +20,8 @@ using Spark.Connect.Core.Sql.DataFrame.Types;
 using Spark.Connect.Core.Sql.DataFrame.Writer;
 using Spark.Connect.Core.Sql.Session;
 
+using static Spark.Connect.Expression.Types;
+
 namespace Spark.Connect.Core.Sql.DataFrame
 {
     /// <summary>
@@ -178,8 +180,21 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <inheritdoc/>
         public IDataFrame Repartition(int numPartitions, string[] columns)
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            List<Expression> partitionExpressions = new List<Expression>();
+            if (columns != null)
+            {
+                partitionExpressions = new List<Expression>(columns.Length);
+                foreach (var c in columns)
+                {
+                    var expr = new Expression
+                    {
+                        UnresolvedAttribute = new UnresolvedAttribute { UnparsedIdentifier = c, },
+                    };
+                    partitionExpressions.Add(expr);
+                }
+            }
+
+            return this.RepartitionByExpressions(numPartitions, partitionExpressions);
         }
 
         /// <inheritdoc/>
@@ -458,6 +473,37 @@ namespace Spark.Connect.Core.Sql.DataFrame
             };
         }
 
-        #endregion Plan Creation Private Methods
+        /// <summary>
+        /// Repartitions the DataFrame by the specified number of partitions and partition expressions.
+        /// </summary>
+        /// <param name="numPartitions">The number of partitions to repartition the DataFrame into.</param>
+        /// <param name="partitionExpressions">The list of partition expressions.</param>
+        /// <returns>The repartitioned DataFrame.</returns>
+        private IDataFrame RepartitionByExpressions(
+            int numPartitions,
+            List<Spark.Connect.Expression> partitionExpressions
+        )
+        {
+            int numPartitionsPointerValue = 1;
+            if (numPartitions != 0)
+            {
+                numPartitionsPointerValue = numPartitions;
+            }
+
+            var newRelation = new Relation
+            {
+                Common = new RelationCommon { PlanId = PlanIdGenerator.NewPlanId(), },
+                RepartitionByExpression = new RepartitionByExpression
+                {
+                    Input = this.relation,
+                    NumPartitions = numPartitionsPointerValue,
+                    PartitionExprs = { partitionExpressions },
+                },
+            };
+
+            return new DataFrame(this.sparkSession, newRelation);
+        }
+
+        #endregion
     }
 }
