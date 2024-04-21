@@ -33,7 +33,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "projects/spark-connect-csharp/src/spark.connect.core",
-        "command": "rm -rf bin obj spark"
+        "command": "rm -rf spark"
       }
     },
     "build": {
