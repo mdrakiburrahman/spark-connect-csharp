@@ -6,10 +6,44 @@
     <Nullable>enable</Nullable>
     <CodeAnalysisRuleSet>..\..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>Apache.Spark.Connect</PackageId>
+    <Version>0.1.0-alpha</Version>
+    <Authors>Raki Rahman</Authors>
+    <Product>SparkConnect</Product>
+    <Description>Apache Spark Connect Client for C#.</Description>
+    <Tags>Apache; Spark; gRPC; Protobuf</Tags>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Apache Spark Connect Client for C#.</Title>
+    <Company>Microsoft</Company>
+    <Copyright>Apache License</Copyright>
+    <PackageProjectUrl>https://github.com/mdrakiburrahman/spark-connect-csharp</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/mdrakiburrahman/spark-connect-csharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>Logo.png</PackageIcon>
+    <PackageTags>Apache; Spark; Connect; gRPC; Protobuf</PackageTags>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\..\Logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   
   <ItemGroup>

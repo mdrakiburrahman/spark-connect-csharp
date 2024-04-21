@@ -5,7 +5,7 @@
 //
 // <copyright file="TestSetup.cs" company="Apache Software Foundation (ASF)">
 // Copyright (c) Apache Software Foundation (ASF). All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// Licensed under the Apache license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------------
 

@@ -7,8 +7,7 @@
     <PropertyGroup>
         <PackageId>Apache.Spark.Connect.Proto</PackageId>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-        <Authors>Microsoft</Authors>
-        <Company>Microsoft</Company>
+        <Authors>Raki Rahman</Authors>
         <Copyright>Apache Spark™</Copyright>
         <Description>Apache Spark Connect Protobuf Code.</Description>
         <Tags>Apache; Spark; gRPC; Protobuf</Tags>
