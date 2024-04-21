@@ -21,7 +21,51 @@ not be used in any production setting.
 
 ## Getting started
 
-`TODO`
+This section explains how run Spark Connect C# locally from scratch.
+
+Step 1: Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) - for running a Spark Server in a Container.
+
+Step 2: Install [Dotnet 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) CLI.
+
+> 💡 Tip: [Install Visual Studio Community Edition](https://visualstudio.microsoft.com/) for a rich debugging experience in C#.
+
+Step 3: Clone this repo.
+
+Step 4: Spin up Spark Connect Server in a container:
+
+Powershell:
+
+```powershell
+$GIT_ROOT = git rev-parse --show-toplevel
+Set-Location -Path "${GIT_ROOT}\projects\spark-connect-csharp\src\spark.connect.test\Common\SparkHost"
+
+docker-compose -f docker-compose-spark-connect-server.yaml up -d
+```
+
+Bash:
+
+```bash
+GIT_ROOT=$(git rev-parse --show-toplevel)
+cd "${GIT_ROOT}/projects/spark-connect-csharp/src/spark.connect.test/Common/SparkHost"
+
+docker-compose -f docker-compose-spark-connect-server.yaml up -d
+```
+
+Step 5: Run the demo project `spark.connect.demo` for an end-to-end demonstration.
+
+```powershell
+$GIT_ROOT = git rev-parse --show-toplevel
+Set-Location -Path "${GIT_ROOT}\projects\spark-connect-csharp\src\spark.connect.demo"
+
+dotnet run --project spark.connect.demo.csproj
+```
+
+```bash
+GIT_ROOT=$(git rev-parse --show-toplevel)
+cd "${GIT_ROOT}/projects/spark-connect-csharp/src/spark.connect.demo"
+
+dotnet run --project spark.connect.demo.csproj
+```
 
 ## High Level Design
 
@@ -33,8 +77,9 @@ not be used in any production setting.
 
 ## Contributing
 
-Please review the [Contribution to Spark guide](https://spark.apache.org/contributing.html)
-for information on how to get started contributing to the project.
+This project uses a [Devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) to manage Build Dependencies. The Devcontainer is tested upon every commit, to ensure the development environment is always ready.
+
+See the [Devcontainer](.devcontainer/README.md) on how to get a development environment setup using Docker Desktop.
 
 ## Built With
 

@@ -15,7 +15,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Apache Spark Connect Client for C#.</Title>
     <Company>Microsoft</Company>
-    <Copyright>Apache License</Copyright>
+    <Copyright>Copyright $([System.DateTime]::Now.Year) $(Company)</Copyright>
     <PackageProjectUrl>https://github.com/mdrakiburrahman/spark-connect-csharp</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/mdrakiburrahman/spark-connect-csharp</RepositoryUrl>
