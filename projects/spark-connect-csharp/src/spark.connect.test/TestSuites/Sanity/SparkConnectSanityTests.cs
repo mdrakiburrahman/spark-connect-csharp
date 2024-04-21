@@ -275,7 +275,7 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             "[[\"apple\",\"123\"],[\"orange\",\"456\"]]",
             "StringType,IntegerType"
         )]
-        public void TestSparkRowReturnsAsExpected(
+        public void TestSparkRowCollectionReturnsAsExpected(
             string query,
             string expectedColumnNames,
             string expectedRowsJson,
