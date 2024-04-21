@@ -12,6 +12,7 @@
 using Grpc.Core;
 
 using Spark.Connect.Core.Sql.DataFrame;
+using Spark.Connect.Core.Sql.DataFrame.Exceptions;
 using Spark.Connect.Core.Sql.DataFrame.Reader;
 
 namespace Spark.Connect.Core.Sql.Session
@@ -74,7 +75,7 @@ namespace Spark.Connect.Core.Sql.Session
             }
             catch (Exception e)
             {
-                throw new Exception($"Failed to execute sql: {query}", e);
+                throw new QueryExecutionException($"{query} : {e}");
             }
 
             while (true)
@@ -95,11 +96,9 @@ namespace Spark.Connect.Core.Sql.Session
                 }
                 catch (Exception e)
                 {
-                    throw new Exception("Failed to receive ExecutePlan response", e);
+                    throw new DataFrameConversionException($"{query} : {e}");
                 }
             }
-
-            throw new Exception("Failed to get SqlCommandResult in ExecutePlan response");
         }
 
         /// <inheritdoc/>
