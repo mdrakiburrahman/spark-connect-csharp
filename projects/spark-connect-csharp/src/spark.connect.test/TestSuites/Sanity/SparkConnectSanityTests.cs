@@ -11,6 +11,7 @@
 
 using Newtonsoft.Json;
 
+using Spark.Connect.Core.Sql.DataFrame.Columns;
 using Spark.Connect.Core.Sql.Session;
 using Spark.Connect.Core.Sql.Session.Builder;
 using Spark.Connect.Test.Common.SparkEnvironment;
@@ -402,6 +403,50 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             // Clean up
             //
             Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
+        }
+
+        /// <summary>
+        /// Asserts repartitioning a DataFrame works as expected.
+        /// </summary>
+        [TestMethod]
+        public void TestRepartitioningAsExpected()
+        {
+            // Setup
+            //
+            var onePartitionFile =
+                "file:///tmp/spark-connect-write-example-output-one-partition.parquet";
+            var twoPartitionFile =
+                "file:///tmp/spark-connect-write-example-output-two-partition.parquet";
+            var withColumnPartitionFile =
+                "file:///tmp/spark-connect-write-example-output-repartition-with-column.parquet";
+            // var withRangePartitionFile =
+            // "file:///tmp/spark-connect-write-example-output-repartition-with-range.parquet";
+            var spark = this.CreateSparkSession();
+            var inMemDf = spark.Sql(DemoQuery);
+
+            // Exercise
+            //
+            var onePartitionDf = inMemDf.Repartition(1, new string[] { });
+            var twoPartitionDf = inMemDf.Repartition(2, new string[] { });
+            var withColumnPartitionDf = inMemDf.Repartition(0, new string[] { "word", "count" });
+            // var withRangePartitionDf = inMemDf.RepartitionByRange(
+            //    2,
+            //    [
+            //        new RangePartitionColumn("word", true),
+            //    ]
+            // );
+            onePartitionDf.Write().Mode("overwrite").Format("parquet").Save(onePartitionFile);
+            twoPartitionDf.Write().Mode("overwrite").Format("parquet").Save(twoPartitionFile);
+            withColumnPartitionDf
+                .Write()
+                .Mode("overwrite")
+                .Format("parquet")
+                .Save(withColumnPartitionFile);
+            // withRangePartitionDf
+            //    .Write()
+            //    .Mode("overwrite")
+            //    .Format("parquet")
+            //    .Save(withRangePartitionFile);
         }
 
         /// <summary>
