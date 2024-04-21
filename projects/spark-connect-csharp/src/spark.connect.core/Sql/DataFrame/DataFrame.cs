@@ -144,8 +144,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <inheritdoc/>
         public IDataFrameWriter Write()
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            return new DataFrameWriter(this.sparkSession, this.relation);
         }
 
         /// <inheritdoc/>
