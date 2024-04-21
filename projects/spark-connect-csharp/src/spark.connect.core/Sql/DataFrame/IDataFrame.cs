@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // <summary>
-// A contract for data frames.
+// A contract for Data Frames.
 // </summary>
 //
 // <copyright file="IDataFrame.cs" company="Apache Software Foundation (ASF)">

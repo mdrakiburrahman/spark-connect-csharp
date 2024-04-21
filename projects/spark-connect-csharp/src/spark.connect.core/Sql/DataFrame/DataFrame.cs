@@ -200,8 +200,33 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <inheritdoc/>
         public IDataFrame RepartitionByRange(int numPartitions, RangePartitionColumn[] columns)
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            List<Expression> partitionExpressions = new List<Expression>();
+            if (columns != null)
+            {
+                partitionExpressions = new List<Expression>(columns.Length);
+                foreach (var c in columns)
+                {
+                    var expr = new Expression
+                    {
+                        UnresolvedAttribute = new UnresolvedAttribute { UnparsedIdentifier = c.ToString(), },
+                    };
+
+                    var direction = Expression.Types.SortOrder.Types.SortDirection.Ascending;
+                    if (c.Descending)
+                    {
+                        direction = Expression.Types.SortOrder.Types.SortDirection.Descending;
+                    }
+
+                    var sortExpr = new Expression
+                    {
+                        SortOrder = new SortOrder { Child = expr, Direction = direction, },
+                    };
+
+                    partitionExpressions.Add(sortExpr);
+                }
+            }
+
+            return this.RepartitionByExpressions(numPartitions, partitionExpressions);
         }
 
         #endregion IDataFrame Implementation
