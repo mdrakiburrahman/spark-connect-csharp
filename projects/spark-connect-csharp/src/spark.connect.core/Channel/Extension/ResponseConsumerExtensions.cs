@@ -19,10 +19,10 @@ namespace Spark.Connect.Core.Channel.Extension
     public static class ResponseConsumerExtensions
     {
         /// <summary>
-        /// Consumes the execute plan client response.
+        /// Execute the Remote Procedure Call (RPC).
         /// </summary>
         /// <param name="responseClient">The response client.</param>
-        public static void ConsumeExecutePlanClient(
+        public static void ExecuteRpc(
             this AsyncServerStreamingCall<ExecutePlanResponse> responseClient
         )
         {

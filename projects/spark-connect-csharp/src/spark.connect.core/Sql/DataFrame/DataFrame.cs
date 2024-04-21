@@ -13,6 +13,7 @@ using Apache.Arrow;
 using Apache.Arrow.Ipc;
 using Apache.Arrow.Types;
 
+using Spark.Connect.Core.Channel.Extension;
 using Spark.Connect.Core.Sql.DataFrame.Columns;
 using Spark.Connect.Core.Sql.DataFrame.Rows;
 using Spark.Connect.Core.Sql.DataFrame.Types;
@@ -150,8 +151,28 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <inheritdoc/>
         public void CreateTempView(string viewName, bool replace, bool global)
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            try
+            {
+                var plan = new Plan
+                {
+                    Command = new Command
+                    {
+                        CreateDataframeView = new CreateDataFrameViewCommand
+                        {
+                            Input = this.relation,
+                            Name = viewName,
+                            Replace = replace,
+                            IsGlobal = global,
+                        },
+                    },
+                };
+
+                this.sparkSession.ExecutePlan(plan).ExecuteRpc();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to create temp view {viewName}: {ex.Message}", ex);
+            }
         }
 
         /// <inheritdoc/>
