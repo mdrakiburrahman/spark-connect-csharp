@@ -129,6 +129,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <inheritdoc/>
         public IDataFrame Repartition(int numPartitions, string[] columns)
         {
+            // TODO: Implement
             throw new System.NotImplementedException();
         }
 
