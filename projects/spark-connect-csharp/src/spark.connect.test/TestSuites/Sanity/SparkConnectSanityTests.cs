@@ -147,6 +147,12 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             false,
             null
         )]
+        [DataRow(
+            "foo",
+            null,
+            true,
+            "AggregateException"
+        )]
         public void TestSparkQueryCanRunAsExpected(
             string query,
             string[] expectedOutputs,
@@ -164,9 +170,15 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             {
                 switch (e)
                 {
-                    case "UriFormatException":
+                    case "AggregateException":
+                        Assert.ThrowsException<AggregateException>(
+                            () => spark.Sql(query)
+                        );
                         break;
                     default:
+                        Assert.ThrowsException<ArgumentException>(
+                            () => spark.Sql(query)
+                        );
                         break;
                 }
             }
