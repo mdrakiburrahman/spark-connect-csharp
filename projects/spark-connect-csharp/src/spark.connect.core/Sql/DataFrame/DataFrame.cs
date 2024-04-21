@@ -39,8 +39,39 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <inheritdoc/>
         public void Show(int numRows, bool truncate)
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            int truncateValue = truncate ? 20 : 0;
+            bool vertical = false;
+
+            var plan = new Plan
+            {
+                Root = new Relation
+                {
+                    Common = new RelationCommon { PlanId = PlanIdGenerator.NewPlanId(), },
+                    ShowString = new ShowString
+                    {
+                        Input = this.relation,
+                        NumRows = numRows,
+                        Truncate = truncateValue,
+                        Vertical = vertical,
+                    },
+                },
+            };
+
+            var responseClient = this.sparkSession.ExecutePlan(plan);
+            while (true)
+            {
+                var response = responseClient.ResponseStream.Current;
+                var arrowBatch = response.ArrowBatch;
+                if (arrowBatch == null)
+                {
+                    continue;
+                }
+
+                this.ShowArrowBatch(arrowBatch);
+                return;
+            }
+
+            throw new Exception("Did not get arrow batch in response");
         }
 
         /// <inheritdoc/>
@@ -79,6 +110,17 @@ namespace Spark.Connect.Core.Sql.DataFrame
 
         /// <inheritdoc/>
         public IDataFrame RepartitionByRange(int numPartitions, RangePartitionColumn[] columns)
+        {
+            // TODO: Implement
+            throw new System.NotImplementedException();
+        }
+
+        private void ShowArrowBatch(ExecutePlanResponse.Types.ArrowBatch arrowBatch)
+        {
+            this.ShowArrowBatchData(arrowBatch.Data.ToByteArray());
+        }
+
+        private void ShowArrowBatchData(byte[] data)
         {
             // TODO: Implement
             throw new System.NotImplementedException();

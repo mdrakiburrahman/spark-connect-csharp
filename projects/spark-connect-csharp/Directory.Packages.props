@@ -19,6 +19,7 @@
     <!-- <PackageVersion Include="System.Text.Json" Version="4.7.2" /> -->
   </ItemGroup>
   <ItemGroup>
+    <PackageVersion Include="Apache.Arrow" Version="16.0.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="Ductus.FluentDocker" Version="2.10.59" />
     <PackageVersion Include="Google.Protobuf" Version="3.23.1" />
