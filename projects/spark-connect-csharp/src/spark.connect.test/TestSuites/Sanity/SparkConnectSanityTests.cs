@@ -139,6 +139,12 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             false,
             null
         )]
+        [DataRow(
+            "select 'potato' as word, 999999999 as count union all select 'tomato' as word, 0 as count",
+            new string[] { "potato", "999999999", "tomato", "0" },
+            false,
+            null
+        )]
         public void TestSparkQueryCanRunAsExpected(
             string query,
             string[] expectedOutputs,
