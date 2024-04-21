@@ -417,6 +417,10 @@ namespace Spark.Connect.Core.Sql.DataFrame
             }
         }
 
+        #endregion Protobuf to Spark Data Type Conversion Private Methods
+
+        #region Plan Creation Private Methods
+
         /// <summary>
         /// Creates a read plan for the DataFrame.
         /// </summary>
