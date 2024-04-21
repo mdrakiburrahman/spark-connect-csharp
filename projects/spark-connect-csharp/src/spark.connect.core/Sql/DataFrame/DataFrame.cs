@@ -15,10 +15,9 @@ using Apache.Arrow.Types;
 
 using Spark.Connect.Core.Sql.DataFrame.Columns;
 using Spark.Connect.Core.Sql.DataFrame.Rows;
+using Spark.Connect.Core.Sql.DataFrame.Types;
 using Spark.Connect.Core.Sql.DataFrame.Writer;
 using Spark.Connect.Core.Sql.Session;
-
-using StructType = Spark.Connect.Core.Sql.DataFrame.Types.StructType;
 
 namespace Spark.Connect.Core.Sql.DataFrame
 {
@@ -80,7 +79,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
         }
 
         /// <inheritdoc/>
-        public StructType Schema()
+        public Spark.Connect.Core.Sql.DataFrame.Types.StructType Schema()
         {
             // TODO: Implement
             throw new System.NotImplementedException();
@@ -154,7 +153,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <param name="data">The byte array representing the Arrow batch.</param>
         /// <param name="schema">The schema of the data.</param>
         /// <returns>A list of rows.</returns>
-        private List<Row> ReadArrowBatchData(byte[] data, StructType? schema)
+        private List<Row> ReadArrowBatchData(byte[] data, Spark.Connect.Core.Sql.DataFrame.Types.StructType? schema)
         {
             var reader = new ArrowStreamReader(new MemoryStream(data));
             var rows = new List<Row>();
@@ -259,6 +258,48 @@ namespace Spark.Connect.Core.Sql.DataFrame
                             $"Unsupported arrow data type {column.Data.DataType.TypeId} in column {columnIndex}"
                         );
                 }
+            }
+        }
+
+        /// <summary>
+        /// Converts the given Proto data type to a corresponding data type in the DataFrame.
+        /// </summary>
+        /// <param name="input">The Proto data type to convert.</param>
+        /// <returns>The corresponding data type in the DataFrame.</returns>
+        private IDataType ConvertProtoDataTypeToDataType(Spark.Connect.DataType input)
+        {
+            switch (input.KindCase)
+            {
+                case Spark.Connect.DataType.KindOneofCase.Boolean:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.BooleanType();
+                case Spark.Connect.DataType.KindOneofCase.Byte:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.ByteType();
+                case Spark.Connect.DataType.KindOneofCase.Short:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.ShortType();
+                case Spark.Connect.DataType.KindOneofCase.Integer:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.IntegerType();
+                case Spark.Connect.DataType.KindOneofCase.Long:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.LongType();
+                case Spark.Connect.DataType.KindOneofCase.Float:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.FloatType();
+                case Spark.Connect.DataType.KindOneofCase.Double:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.DoubleType();
+                case Spark.Connect.DataType.KindOneofCase.Decimal:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.DecimalType();
+                case Spark.Connect.DataType.KindOneofCase.String:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.StringType();
+                case Spark.Connect.DataType.KindOneofCase.Binary:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.BinaryType();
+                case Spark.Connect.DataType.KindOneofCase.Timestamp:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.TimestampType();
+                case Spark.Connect.DataType.KindOneofCase.TimestampNtz:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.TimestampNTZType();
+                case Spark.Connect.DataType.KindOneofCase.Date:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.DateType();
+                default:
+                    return new Spark.Connect.Core.Sql.DataFrame.Types.UnsupportedType(
+                        input.KindCase.ToString()
+                    );
             }
         }
     }
