@@ -83,8 +83,26 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <inheritdoc/>
         public Spark.Connect.Core.Sql.DataFrame.Types.StructType Schema()
         {
-            // TODO: Implement
-            throw new System.NotImplementedException();
+            try
+            {
+                var response = this.sparkSession.AnalyzePlan(
+                    new Plan
+                    {
+                        Root = new Relation
+                        {
+                            Common = new RelationCommon { PlanId = PlanIdGenerator.NewPlanId(), },
+                            Read = new Read { DataSource = this.relation.Read.DataSource, },
+                        },
+                    }
+                );
+                var responseSchema = response.Schema.Schema_;
+                var result = this.ConvertProtoDataTypeToStructType(responseSchema);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to get schema", ex);
+            }
         }
 
         /// <inheritdoc/>
