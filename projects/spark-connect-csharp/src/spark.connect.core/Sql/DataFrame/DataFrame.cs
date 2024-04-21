@@ -206,7 +206,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
                 {
                     var expr = new Expression
                     {
-                        UnresolvedAttribute = new UnresolvedAttribute { UnparsedIdentifier = c.ToString(), },
+                        UnresolvedAttribute = new UnresolvedAttribute { UnparsedIdentifier = c.Name, },
                     };
 
                     var direction = Expression.Types.SortOrder.Types.SortDirection.Ascending;
