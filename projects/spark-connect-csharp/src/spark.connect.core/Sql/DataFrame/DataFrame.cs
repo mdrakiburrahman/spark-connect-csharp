@@ -15,6 +15,7 @@ using Apache.Arrow.Types;
 
 using Spark.Connect.Core.Channel.Extension;
 using Spark.Connect.Core.Sql.DataFrame.Columns;
+using Spark.Connect.Core.Sql.DataFrame.Exceptions;
 using Spark.Connect.Core.Sql.DataFrame.Rows;
 using Spark.Connect.Core.Sql.DataFrame.Types;
 using Spark.Connect.Core.Sql.DataFrame.Writer;
@@ -67,7 +68,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
             };
 
             var responseClient = this.sparkSession.ExecutePlan(plan);
-            while (true)
+            while (responseClient.ResponseStream.MoveNext(CancellationToken.None).Result)
             {
                 var response = responseClient.ResponseStream.Current;
                 var arrowBatch = response.ArrowBatch;
@@ -80,7 +81,7 @@ namespace Spark.Connect.Core.Sql.DataFrame
                 return;
             }
 
-            throw new Exception("Did not get arrow batch in response");
+            throw new NoDataReceivedException("Arrow Batch");
         }
 
         /// <inheritdoc/>

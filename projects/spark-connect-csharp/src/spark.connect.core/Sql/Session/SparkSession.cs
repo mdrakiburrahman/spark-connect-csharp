@@ -78,7 +78,7 @@ namespace Spark.Connect.Core.Sql.Session
                 throw new QueryExecutionException($"{query} : {e}");
             }
 
-            while (true)
+            while (responseClient.ResponseStream.MoveNext(CancellationToken.None).Result)
             {
                 try
                 {
@@ -99,6 +99,8 @@ namespace Spark.Connect.Core.Sql.Session
                     throw new DataFrameConversionException($"{query} : {e}");
                 }
             }
+
+            throw new NoDataReceivedException($"{query}");
         }
 
         /// <inheritdoc/>

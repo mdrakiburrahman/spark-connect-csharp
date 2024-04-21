@@ -12,7 +12,7 @@
 namespace Spark.Connect.Core.Sql.DataFrame.Exceptions
 {
     /// <summary>
-    /// Exception thrown when interacting with a Spark Session.
+    /// Exception thrown when converting into a DataFrame.
     /// </summary>
     public class DataFrameConversionException : Exception
     {

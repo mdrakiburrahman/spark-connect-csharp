@@ -1,9 +1,9 @@
 // -----------------------------------------------------------------------------
 // <summary>
-// An exception thrown when executing a query.
+// An exception thrown when no data is received from the Server.
 // </summary>
 //
-// <copyright file="QueryExecutionException.cs" company="Apache Software Foundation (ASF)">
+// <copyright file="NoDataReceivedException.cs" company="Apache Software Foundation (ASF)">
 // Copyright (c) Apache Software Foundation (ASF). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -12,30 +12,30 @@
 namespace Spark.Connect.Core.Sql.DataFrame.Exceptions
 {
     /// <summary>
-    /// Exception thrown when executing a query.
+    /// Exception thrown when no data is received for a query.
     /// </summary>
-    public class QueryExecutionException : Exception
+    public class NoDataReceivedException : Exception
     {
         /// <summary>
         /// The template message.
         /// </summary>
-        public const string TemplateMessage = "Failed to execute query: {0}";
+        public const string TemplateMessage = "No data received from server: {0}";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryExecutionException"/> class with a specified error message.
+        /// Initializes a new instance of the <see cref="NoDataReceivedException"/> class with a specified error message.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
-        public QueryExecutionException(string message)
+        public NoDataReceivedException(string message)
             : base($"{TemplateMessage}: {message}") { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryExecutionException"/> class with a specified error message
+        /// Initializes a new instance of the <see cref="NoDataReceivedException"/> class with a specified error message
         /// and a reference to the inner exception that is the cause of this exception.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference
         /// if no inner exception is specified.</param>
-        public QueryExecutionException(string message, Exception innerException)
+        public NoDataReceivedException(string message, Exception innerException)
             : base($"{TemplateMessage}: {message}", innerException) { }
     }
 }
