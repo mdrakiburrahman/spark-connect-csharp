@@ -9,7 +9,9 @@ services:
       --conf "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension"
       --conf "spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"
     environment:
+      # Keeps the container running
       - SPARK_NO_DAEMONIZE=true
     ports:
+      # Left: Host, Right: Container
       - "4040:4040"
       - "15002:15002"
