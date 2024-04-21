@@ -99,7 +99,6 @@ namespace Spark.Connect.Test.TestSuites.Sanity
         [DataRow("host.docker.internal:15002;user_id=a;token=b;x-other-header=c", true, "ArgumentException")]
         [DataRow("abc://host.docker.internal:15002", true, "ArgumentException")]
         [DataRow("abc://host.docker.internal:15002/;user_id=a;token=b;x-other-header=c", true, "ArgumentException")]
-        // csharpier-ignore-end
         public void TestSparkSessionCanBuildAsExpected(string url, bool shouldThrow, string e)
         {
             if (shouldThrow)
@@ -107,10 +106,14 @@ namespace Spark.Connect.Test.TestSuites.Sanity
                 switch (e)
                 {
                     case "UriFormatException":
-                        Assert.ThrowsException<UriFormatException>(() => this.CreateSparkSession(url));
+                        Assert.ThrowsException<UriFormatException>(
+                            () => this.CreateSparkSession(url)
+                        );
                         break;
                     default:
-                        Assert.ThrowsException<ArgumentException>(() => this.CreateSparkSession(url));
+                        Assert.ThrowsException<ArgumentException>(
+                            () => this.CreateSparkSession(url)
+                        );
                         break;
                 }
             }
@@ -120,20 +123,49 @@ namespace Spark.Connect.Test.TestSuites.Sanity
                 Assert.IsNotNull(spark);
             }
         }
+        // csharpier-ignore-end
 
         /// <summary>
-        /// Asserts query can run.
+        /// Asserts queries return expected results.
         /// </summary>
         /// <param name="query">The query to run.</param>
+        /// <param name="expectedOutputs">The expected outputs.</param>
         /// <param name="shouldThrow">Should throw during initialization.</param>
         /// <param name="e">Thrown exception type.</param>
         [TestMethod]
-        [DataRow("select 'apple' as word, 123 as count union all select 'orange' as word, 456 as count", false, null)]
-        public void TestSparkQueryCanRunAsExpected(string query, bool shouldThrow, string e)
+        [DataRow(
+            "select 'apple' as word, 123 as count union all select 'orange' as word, 456 as count",
+            new string[] { "orange", "456", "apple", "123" },
+            false,
+            null
+        )]
+        public void TestSparkQueryCanRunAsExpected(
+            string query,
+            string[] expectedOutputs,
+            bool shouldThrow,
+            string e
+        )
         {
+            // Setup
+            //
             var spark = this.CreateSparkSession();
             var df = spark.Sql(query);
+
+            var consoleOutput = new StringWriter();
+            Console.SetOut(consoleOutput);
+
+            // Exercise
+            //
             df.Show();
+
+            // Verify
+            //
+            var output = consoleOutput.ToString();
+            Assert.IsTrue(expectedOutputs.All(o => output.Contains(o)));
+
+            // Clean up
+            //
+            Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
         }
 
         /// <summary>
