@@ -16,5 +16,5 @@ namespace Spark.Connect.Core.Sql.DataFrame.Types
     /// <summary>
     /// Represents a structured data type.
     /// </summary>
-    public record StructType(string TypeName, StructField[] Fields);
+    public record StructType(string TypeName, List<StructField> Fields);
 }

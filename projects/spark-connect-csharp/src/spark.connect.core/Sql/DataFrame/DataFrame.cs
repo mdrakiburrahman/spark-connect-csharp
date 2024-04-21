@@ -153,7 +153,10 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <param name="data">The byte array representing the Arrow batch.</param>
         /// <param name="schema">The schema of the data.</param>
         /// <returns>A list of rows.</returns>
-        private List<Row> ReadArrowBatchData(byte[] data, Spark.Connect.Core.Sql.DataFrame.Types.StructType? schema)
+        private List<Row> ReadArrowBatchData(
+            byte[] data,
+            Spark.Connect.Core.Sql.DataFrame.Types.StructType? schema
+        )
         {
             var reader = new ArrowStreamReader(new MemoryStream(data));
             var rows = new List<Row>();
@@ -259,6 +262,60 @@ namespace Spark.Connect.Core.Sql.DataFrame
                         );
                 }
             }
+        }
+
+        /// <summary>
+        /// Converts the given Proto struct type to a corresponding StructType in the DataFrame.
+        /// </summary>
+        /// <param name="input">The Proto struct types to convert.</param>
+        /// <returns>The corresponding StructType in the DataFrame.</returns>
+        private Spark.Connect.Core.Sql.DataFrame.Types.StructType ConvertProtoDataTypeToStructType(
+            Spark.Connect.DataType input
+        )
+        {
+            var dataTypeStruct = input.Struct;
+            if (dataTypeStruct == null)
+            {
+                throw new InvalidOperationException("dataType.Struct is null");
+            }
+
+            return new Spark.Connect.Core.Sql.DataFrame.Types.StructType(
+                string.Empty,
+                this.ConvertProtoStructFields(dataTypeStruct.Fields.ToList())
+            );
+        }
+
+        /// <summary>
+        /// Converts the given Proto struct fields to a corresponding list of StructFields in the DataFrame.
+        /// </summary>
+        /// <param name="input">The Proto struct fields to convert.</param>
+        /// <returns>The corresponding list of StructFields in the DataFrame.</returns>
+        private List<Spark.Connect.Core.Sql.DataFrame.Fields.StructField> ConvertProtoStructFields(
+            List<Spark.Connect.DataType.Types.StructField> input
+        )
+        {
+            var result = new List<Spark.Connect.Core.Sql.DataFrame.Fields.StructField>(input.Count);
+            foreach (var f in input)
+            {
+                result.Add(this.ConvertProtoStructField(f));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Converts the given Proto struct field to a corresponding StructField in the DataFrame.
+        /// </summary>
+        /// <param name="field">The Proto struct field to convert.</param>
+        /// <returns>The corresponding StructField in the DataFrame.</returns>
+        private Spark.Connect.Core.Sql.DataFrame.Fields.StructField ConvertProtoStructField(
+            Spark.Connect.DataType.Types.StructField field
+        )
+        {
+            return new Spark.Connect.Core.Sql.DataFrame.Fields.StructField(
+                field.Name,
+                this.ConvertProtoDataTypeToDataType(field.DataType)
+            );
         }
 
         /// <summary>
