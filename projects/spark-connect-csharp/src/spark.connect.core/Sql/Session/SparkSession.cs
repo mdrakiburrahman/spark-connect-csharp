@@ -74,6 +74,39 @@ namespace Spark.Connect.Core.Sql.Session
         }
 
         /// <summary>
+        /// Executes a plan asynchronously.
+        /// </summary>
+        /// <param name="plan">The plan to execute.</param>
+        /// <returns>The asynchronous streaming call for executing the plan.</returns>
+        internal AsyncServerStreamingCall<ExecutePlanResponse> ExecutePlan(Plan plan)
+        {
+            var request = new ExecutePlanRequest
+            {
+                SessionId = this.SessionId,
+                Plan = plan,
+                UserContext = new UserContext { UserId = "na", },
+            };
+
+            var headers = new Metadata();
+            foreach (var entry in this.Metadata)
+            {
+                headers.Add(entry.Key, entry.Value);
+            }
+
+            var callOptions = new CallOptions(headers);
+
+            try
+            {
+                var responseClient = this.Client.ExecutePlan(request, callOptions);
+                return responseClient;
+            }
+            catch (RpcException e)
+            {
+                throw new Exception($"Failed to call ExecutePlan in session {this.SessionId}", e);
+            }
+        }
+
+        /// <summary>
         /// Analyzes the execution plan of a Spark SQL query.
         /// </summary>
         /// <param name="plan">The execution plan to analyze.</param>
