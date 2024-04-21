@@ -9,6 +9,8 @@
 // </copyright>
 // -----------------------------------------------------------------------------
 
+using Newtonsoft.Json;
+
 using Spark.Connect.Core.Sql.Session;
 using Spark.Connect.Core.Sql.Session.Builder;
 using Spark.Connect.Test.Common.SparkEnvironment;
@@ -212,10 +214,30 @@ namespace Spark.Connect.Test.TestSuites.Sanity
                 'apple' AS fruit_name, 
                 9999999929299292 AS num_purchases, 
                 3.487947484763867328929829272 AS price",
-            new string[] { "is_fruit", "fruit_id", "purchase_timestamp", "fruit_name", "num_purchases", "price" },
-            new string[] { "BooleanType", "IntegerType", "TimestampType", "StringType", "LongType", "DecimalType" }
+            new string[]
+            {
+                "is_fruit",
+                "fruit_id",
+                "purchase_timestamp",
+                "fruit_name",
+                "num_purchases",
+                "price",
+            },
+            new string[]
+            {
+                "BooleanType",
+                "IntegerType",
+                "TimestampType",
+                "StringType",
+                "LongType",
+                "DecimalType",
+            }
         )]
-        public void TestSparkSchemaReturnsAsExpected(string query, string[] expectedColumnNames, string[] expectedDataTypes)
+        public void TestSparkSchemaReturnsAsExpected(
+            string query,
+            string[] expectedColumnNames,
+            string[] expectedDataTypes
+        )
         {
             // Setup
             //
@@ -226,13 +248,80 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             //
             var schema = df.Schema();
 
-            // Loop and print each column name and type
+            // Verify
             //
             for (int i = 0; i < expectedColumnNames.Length; i++)
             {
                 var field = schema.Fields.FirstOrDefault(f => f.Name == expectedColumnNames[i]);
                 Assert.IsNotNull(field, $"Field {expectedColumnNames[i]} not found in schema.");
-                Assert.AreEqual($"Spark.Connect.Core.Sql.DataFrame.Types.{expectedDataTypes[i]}", field.DataType.ToString());
+                Assert.AreEqual(
+                    $"Spark.Connect.Core.Sql.DataFrame.Types.{expectedDataTypes[i]}",
+                    field.DataType.ToString()
+                );
+            }
+        }
+
+        /// <summary>
+        /// Asserts queries return expected results.
+        /// </summary>
+        /// <param name="query">The query to run.</param>
+        /// <param name="expectedColumnNames">The expected column names.</param>
+        /// <param name="expectedRowsJson">The expected rows in JSON format.</param>
+        /// <param name="expectedColumnTypes">The expected column types.</param>
+        [TestMethod]
+        [DataRow(
+            "SELECT 'apple' as word, 123 as count UNION ALL SELECT 'orange' as word, 456 as count",
+            "word,count",
+            "[[\"apple\",\"123\"],[\"orange\",\"456\"]]",
+            "StringType,IntegerType"
+        )]
+        public void TestSparkRowReturnsAsExpected(
+            string query,
+            string expectedColumnNames,
+            string expectedRowsJson,
+            string expectedColumnTypes
+        )
+        {
+            // Convert CSV and JSON parameters to arrays
+            string[] expectedColumnNamesArray = expectedColumnNames.Split(',');
+
+#pragma warning disable CS8600
+            string[][] expectedRows = JsonConvert.DeserializeObject<string[][]>(expectedRowsJson);
+#pragma warning restore CS8600
+            string[] expectedColumTypesArray = expectedColumnTypes.Split(',');
+
+            // Setup
+            //
+            var spark = this.CreateSparkSession();
+            var df = spark.Sql(query);
+
+            // Exercise
+            //
+            var rows = df.Collect();
+
+            // Verify
+            //
+            for (int i = 0; i < expectedRows?.Length; i++)
+            {
+                var row = rows[i];
+                var schema = row.Schema();
+                var values = row.Values();
+
+                for (int j = 0; j < expectedColumnNamesArray.Length; j++)
+                {
+                    var field = schema?.Fields.FirstOrDefault(
+                        f => f.Name == expectedColumnNamesArray[j]
+                    );
+                    Assert.IsNotNull(
+                        field,
+                        $"Field {expectedColumnNamesArray[j]} not found in schema."
+                    );
+                    Assert.AreEqual(
+                        $"Spark.Connect.Core.Sql.DataFrame.Types.{expectedColumTypesArray[j]}",
+                        field.DataType.ToString()
+                    );
+                    Assert.AreEqual(expectedRows[i][j], values[j].ToString());
+                }
             }
         }
 

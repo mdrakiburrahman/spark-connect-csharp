@@ -13,6 +13,8 @@ using Apache.Arrow;
 using Apache.Arrow.Ipc;
 using Apache.Arrow.Types;
 
+using Grpc.Core;
+
 using Spark.Connect.Core.Channel.Extension;
 using Spark.Connect.Core.Sql.DataFrame.Columns;
 using Spark.Connect.Core.Sql.DataFrame.Exceptions;
@@ -103,46 +105,41 @@ namespace Spark.Connect.Core.Sql.DataFrame
         /// <inheritdoc/>
         public IRow[] Collect()
         {
-            try
-            {
-                var responseClient = this.sparkSession.ExecutePlan(this.CreatePlan());
-                Spark.Connect.Core.Sql.DataFrame.Types.StructType? schema = default;
-                var allRows = new List<IRow>();
+            var responseClient = this.sparkSession.ExecutePlan(this.CreatePlan());
+            Spark.Connect.Core.Sql.DataFrame.Types.StructType? schema = default;
+            var allRows = new List<IRow>();
 
-                while (true)
+            while (responseClient.ResponseStream.MoveNext().Result)
+            {
+                var response = responseClient.ResponseStream.Current;
+                if (response == null)
                 {
-                    var response = responseClient.ResponseStream.Current;
-                    if (response == null)
-                    {
-                        return allRows.ToArray();
-                    }
-
-                    var dataType = response.Schema;
-                    if (dataType != null)
-                    {
-                        schema = this.ConvertProtoDataTypeToStructType(dataType);
-                        continue;
-                    }
-
-                    var arrowBatch = response.ArrowBatch;
-                    if (arrowBatch == null)
-                    {
-                        continue;
-                    }
-
-                    var rowBatch = this.ReadArrowBatchData(arrowBatch.Data.ToByteArray(), schema);
-                    if (rowBatch == null)
-                    {
-                        throw new Exception("Failed to read arrow batch data");
-                    }
-
-                    allRows.AddRange(rowBatch);
+                    return allRows.ToArray();
                 }
+
+                var dataType = response.Schema;
+                if (dataType != null)
+                {
+                    schema = this.ConvertProtoDataTypeToStructType(dataType);
+                    continue;
+                }
+
+                var arrowBatch = response.ArrowBatch;
+                if (arrowBatch == null)
+                {
+                    continue;
+                }
+
+                var rowBatch = this.ReadArrowBatchData(arrowBatch.Data.ToByteArray(), schema);
+                if (rowBatch == null)
+                {
+                    throw new Exception("Failed to read arrow batch data");
+                }
+
+                allRows.AddRange(rowBatch);
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to execute plan: {ex.Message}", ex);
-            }
+
+            return allRows.ToArray();
         }
 
         /// <inheritdoc/>
