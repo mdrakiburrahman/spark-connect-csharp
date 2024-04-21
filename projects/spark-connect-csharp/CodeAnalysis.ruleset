@@ -73,8 +73,8 @@
     <Rule Id="SA1511" Action="Warning" />
     <Rule Id="SA1512" Action="Warning" />
     <Rule Id="SA1513" Action="Warning" />
-    <Rule Id="SA1514" Action="Warning" />
-    <Rule Id="SA1515" Action="Warning" />
+    <Rule Id="SA1514" Action="None" />
+    <Rule Id="SA1515" Action="None" />
     <Rule Id="SA1516" Action="Warning" />
     <Rule Id="SA1517" Action="Warning" />
     <Rule Id="SA1518" Action="Warning" />
@@ -184,6 +184,8 @@
     <Rule Id="SA1208" Action="None" />
     <Rule Id="SA1401" Action="None" />
     <Rule Id="SA1502" Action="None" />
+    <Rule Id="SA1514" Action="None" />
+    <Rule Id="SA1515" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.SpacingRules">
     <Rule Id="SA1000" Action="Warning" />

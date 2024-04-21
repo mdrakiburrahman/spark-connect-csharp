@@ -25,10 +25,18 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
     /// </summary>
     public class SparkConnectServer : DockerComposeTestBase
     {
+        /// <summary>
+        /// The Spark Master URI.
+        /// </summary>
+        public readonly string SparkMasterUri = "http://host.docker.internal:4040";
+
+        /// <summary>
+        /// The Spark Connect URI.
+        /// </summary>
+        public readonly string SparkConnectUri = "sc://host.docker.internal:15002";
+
         private readonly string composeFilePath =
             "Common/SparkHost/docker-compose-spark-connect-server.yaml";
-
-        private readonly string sparkMasterUri = "http://host.docker.internal:4040";
 
         private readonly int sparkReadinessTimeoutInSeconds = 60;
 
@@ -95,7 +103,7 @@ namespace Spark.Connect.Test.Common.SparkEnvironment
                 {
                     var startTime = DateTime.Now;
 
-                    while (string.IsNullOrEmpty(await this.sparkMasterUri.Wget()))
+                    while (string.IsNullOrEmpty(await this.SparkMasterUri.Wget()))
                     {
                         if (
                             (DateTime.Now - startTime).TotalSeconds

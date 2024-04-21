@@ -9,6 +9,8 @@
 // </copyright>
 // -----------------------------------------------------------------------------
 
+using Spark.Connect.Core.Sql.Session;
+using Spark.Connect.Core.Sql.Session.Builder;
 using Spark.Connect.Test.Common.SparkEnvironment;
 
 namespace Spark.Connect.Test.TestSuites.Sanity
@@ -77,18 +79,57 @@ namespace Spark.Connect.Test.TestSuites.Sanity
 
         #region Test Methods
 
+        // csharpier-ignore-start
         /// <summary>
-        /// Ensure Spark Connect can connect to the Spark cluster.
+        /// Asserts Spark Session can build as expected.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        /// <param name="url">The Spark Connect Server url.</param>
+        /// <param name="shouldThrow">Should throw during initialization.</param>
+        /// <param name="e">Thrown exception type.</param>
         [TestMethod]
-        public async Task SparkConnectCanConnectAsync()
+        [DataRow("sc://host.docker.internal:15002", false, null)]
+        [DataRow("sc://host.docker.internal:15002/;user_id=a;token=b;x-other-header=c", false, null)]
+        [DataRow("sc://host.docker.internal:123", false, null)]
+        [DataRow("sc://host.docker.internal:123/;user_id=a;token=b;x-other-header=c", false, null)]
+        [DataRow("sc://host.docker.internal", false, null)]
+        [DataRow("sc://host.docker.internal/;user_id=a;token=b;x-other-header=c", false, null)]
+        [DataRow("sc://host.docker.internal:port", true, "UriFormatException")]
+        [DataRow("sc://host.docker.internal:port/;user_id=a;token=b;x-other-header=c", true, "UriFormatException")]
+        [DataRow("host.docker.internal:15002", true, "ArgumentException")]
+        [DataRow("host.docker.internal:15002;user_id=a;token=b;x-other-header=c", true, "ArgumentException")]
+        [DataRow("abc://host.docker.internal:15002", true, "ArgumentException")]
+        [DataRow("abc://host.docker.internal:15002/;user_id=a;token=b;x-other-header=c", true, "ArgumentException")]
+        // csharpier-ignore-end
+        public void TestSparkSessionCanBuildAsExpected(string url, bool shouldThrow, string e)
         {
-            // TODO: Implement test
-            await Task.Delay(1000);
-            Assert.AreEqual(1, 1);
+            if (shouldThrow)
+            {
+                switch (e)
+                {
+                    case "UriFormatException":
+                        Assert.ThrowsException<UriFormatException>(() => this.CreateSparkSession(url));
+                        break;
+                    default:
+                        Assert.ThrowsException<ArgumentException>(() => this.CreateSparkSession(url));
+                        break;
+                }
+            }
+            else
+            {
+                var spark = this.CreateSparkSession(url);
+                Assert.IsNotNull(spark);
+            }
         }
 
-        #endregion Test Methods
+        /// <summary>
+        /// Creates a new instance of the Spark session.
+        /// </summary>
+        /// <returns>The Spark session.</returns>
+        private ISparkSession CreateSparkSession(string url)
+        {
+            return new SparkSessionBuilder(url).Build();
+        }
+
+        #endregion Private Helper Methods
     }
 }
