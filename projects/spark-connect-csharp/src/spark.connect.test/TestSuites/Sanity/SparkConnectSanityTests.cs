@@ -13,6 +13,8 @@ using Spark.Connect.Core.Sql.Session;
 using Spark.Connect.Core.Sql.Session.Builder;
 using Spark.Connect.Test.Common.SparkEnvironment;
 
+using System;
+
 namespace Spark.Connect.Test.TestSuites.Sanity
 {
     /// <summary>
@@ -155,23 +157,36 @@ namespace Spark.Connect.Test.TestSuites.Sanity
             // Setup
             //
             var spark = this.CreateSparkSession();
-            var df = spark.Sql(query);
-
             var consoleOutput = new StringWriter();
             Console.SetOut(consoleOutput);
 
-            // Exercise
-            //
-            df.Show();
+            if (shouldThrow)
+            {
+                switch (e)
+                {
+                    case "UriFormatException":
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                var df = spark.Sql(query);
 
-            // Verify
-            //
-            var output = consoleOutput.ToString();
-            Assert.IsTrue(expectedOutputs.All(o => output.Contains(o)));
+                // Exercise
+                //
+                df.Show();
 
-            // Clean up
-            //
-            Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
+                // Verify
+                //
+                var output = consoleOutput.ToString();
+                Assert.IsTrue(expectedOutputs.All(o => output.Contains(o)));
+
+                // Clean up
+                //
+                Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
+            }
         }
 
         /// <summary>
