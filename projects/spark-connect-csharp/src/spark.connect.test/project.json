@@ -1,0 +1,24 @@
+{
+  "name": "spark.connect.test",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx-dotnet/core:format",
+      "configurations": {
+        "ci": {
+          "check": true
+        },
+        "dev": {
+          "check": true,
+          "fix": true
+        }
+      },
+      "defaultConfiguration": "dev"
+    },
+    "test": {
+      "executor": "@nx-dotnet/core:test"
+    }
+  },
+  "tags": []
+}

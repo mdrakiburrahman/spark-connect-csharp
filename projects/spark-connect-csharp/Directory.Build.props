@@ -1,0 +1,18 @@
+<Project>
+    <!-- Common -->
+    <PropertyGroup>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <!-- Build -->
+    <PropertyGroup>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+
+    <!-- Packaging -->
+    <PropertyGroup>
+        <Authors>mdrrahman@microsoft.com</Authors>
+    </PropertyGroup>
+</Project>

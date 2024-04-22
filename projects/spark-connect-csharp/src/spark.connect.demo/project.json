@@ -1,0 +1,45 @@
+{
+  "name": "spark.connect.demo",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx-dotnet/core:format",
+      "configurations": {
+        "ci": {
+          "check": true
+        },
+        "dev": {
+          "check": true,
+          "fix": true
+        }
+      },
+      "defaultConfiguration": "dev"
+    },
+    "spark": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["infra"],
+      "options": {
+        "cwd": "projects/spark-connect-csharp/src/spark.connect.test/Common/SparkHost",
+        "commands": [
+          "docker-compose -f docker-compose-spark-connect-server.yaml up -d",
+          "while ! wget -qO - http://host.docker.internal:4040 | grep -q 'Spark'; do echo 'Waiting for Spark to be up...'; sleep 1; done"
+        ]
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["spark"],
+      "options": {
+        "cwd": "projects/spark-connect-csharp/src/spark.connect.demo",
+        "commands": [
+          {
+            "command": "dotnet run --project spark.connect.demo.csproj --framework net8.0",
+            "forwardAllArgs": false
+          }
+        ]
+      }
+    }
+  },
+  "tags": []
+}

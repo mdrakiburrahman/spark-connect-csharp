@@ -1,0 +1,37 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <NoWarn>NU5104</NoWarn>
+    <!-- Ignore  error NU5104: A stable release of a package should not have a prerelease dependency thrown for having custom versioning for sdk packages -->
+  </PropertyGroup>
+  <ItemGroup>
+    <!--
+        Overview:
+        This file centrally manages the version of all NuGet packages used by this repo.
+
+        To use this:
+
+        - Enable ManagePackageVersionsCentrally in directory.build.props.
+        - Add all referenced packages (from each .csproj) into this file.
+        - Remove the version attribute from each .csproj. They'll be defined here.
+    -->
+    <!-- Example: -->
+    <!-- <PackageVersion Include="System.Text.Json" Version="4.7.2" /> -->
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="Apache.Arrow" Version="16.0.0" />
+    <PackageVersion Include="Apache.Spark.Connect" Version="0.1.2-alpha" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <PackageVersion Include="Ductus.FluentDocker" Version="2.10.59" />
+    <PackageVersion Include="Google.Protobuf" Version="3.23.1" />
+    <PackageVersion Include="Grpc.Core.Api" Version="2.55.0" />
+    <PackageVersion Include="Grpc.Core" Version="2.46.6" />
+    <PackageVersion Include="Grpc.Tools" Version="2.56.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.1.1" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.1.1" />
+    <!-- We have to use the beta, because StyleCop stable doesn't recognize Records: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/3213#issuecomment-725780613 /> -->
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
+    <PackageVersion Include="Testcontainers" Version="3.8.0" />
+  </ItemGroup>
+</Project>
