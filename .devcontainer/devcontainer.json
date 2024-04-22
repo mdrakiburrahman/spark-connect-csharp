@@ -1,6 +1,6 @@
 {
-  "name": "PrebuiltDev",
-  "image": "rakirahman.azurecr.io/devcontainer/spark-connect-csharp:db665a94d13811201296827bcb868f4fc9ee23ed991149a0c22c05d05a9503a8",
-  "remoteUser": "vscode",
-  "containerUser": "vscode"
+    "name": "MonitoringDevcontainer",
+    "image": "rakirahman.azurecr.io/devcontainer/spark-connect-csharp:74482637c8f61dd2a9fb55c8692cbe14c4bad85fa46a1b7c654b5a9f9e2bad18",
+    "remoteUser": "vscode",
+    "containerUser": "vscode"
 }

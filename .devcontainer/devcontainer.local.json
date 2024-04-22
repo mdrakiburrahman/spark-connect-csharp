@@ -99,6 +99,7 @@
         "foxundermoon.shell-format", // Shell script formatter
         "github.copilot-chat", // Copilot chat integration
         "github.copilot", // Copilot integration
+        "github.vscode-github-actions", // GitHub Actions support
         "Gruntfuggly.todo-tree", // Highlights TODO comments in code
         "huntertran.auto-markdown-toc", // Auto-generated Markdown Table of Contents
         "IBM.output-colorizer", // Colorize your output/test logs
