@@ -64,7 +64,7 @@ dotnet run --project spark.connect.demo.csproj
 GIT_ROOT=$(git rev-parse --show-toplevel)
 cd "${GIT_ROOT}/projects/spark-connect-csharp/src/spark.connect.demo"
 
-dotnet run --project spark.connect.demo.csproj
+dotnet run --project spark.connect.demo.csproj --framework net8.0
 ```
 
 ## High Level Design

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Apache.Arrow" Version="16.0.0" />
+    <PackageVersion Include="Apache.Spark.Connect" Version="0.1.2-alpha" />
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="Ductus.FluentDocker" Version="2.10.59" />
     <PackageVersion Include="Google.Protobuf" Version="3.23.1" />
