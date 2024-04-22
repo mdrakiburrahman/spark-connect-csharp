@@ -29,7 +29,7 @@ Step 2: Install [Dotnet 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.
 
 > 💡 Tip: [Install Visual Studio Community Edition](https://visualstudio.microsoft.com/) for a rich debugging experience in C#.
 
-Step 3: Clone this repo.
+Step 3: Clone this repo via `git`.
 
 Step 4: Spin up Spark Connect Server in a container:
 
