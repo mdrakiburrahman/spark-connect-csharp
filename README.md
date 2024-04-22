@@ -1,6 +1,6 @@
 <!-- PROJECT LOGO -->
 <p align="center">
-  <img src="Logo.png" alt="Logo">
+  <img src="https://rakirahman.blob.core.windows.net/public/images/Misc/Spark-Connect-Csharp.png" alt="Logo">
   <h3 align="center">Apache Spark Connect Client for C#</h3>
   <p align="center">
     Communicating to Spark Connect Server with a thin C# gRPC Client.
