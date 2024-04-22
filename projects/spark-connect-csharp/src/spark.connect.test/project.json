@@ -16,16 +16,8 @@
       },
       "defaultConfiguration": "dev"
     },
-    "clean": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "projects/spark-connect-csharp/src/spark.connect.test",
-        "command": "rm -rf bin obj"
-      }
-    },
     "test": {
-      "executor": "@nx-dotnet/core:test",
-      "dependsOn": ["clean"]
+      "executor": "@nx-dotnet/core:test"
     }
   },
   "tags": []

@@ -29,13 +29,6 @@
       },
       "dependsOn": ["init"]
     },
-    "clean": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "projects/spark-connect-csharp/src/spark.connect.core",
-        "command": "rm -rf spark"
-      }
-    },
     "build": {
       "executor": "@nx-dotnet/core:build",
       "options": {
@@ -48,7 +41,7 @@
           "configuration": "Release"
         }
       },
-      "dependsOn": ["sync", "clean"]
+      "dependsOn": ["sync"]
     },
     "lint": {
       "executor": "@nx-dotnet/core:format",
