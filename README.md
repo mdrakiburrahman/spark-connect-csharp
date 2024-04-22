@@ -57,7 +57,7 @@ Step 5: Run the demo project `spark.connect.demo` for an end-to-end demonstratio
 $GIT_ROOT = git rev-parse --show-toplevel
 Set-Location -Path "${GIT_ROOT}\projects\spark-connect-csharp\src\spark.connect.demo"
 
-dotnet run --project spark.connect.demo.csproj
+dotnet run --project spark.connect.demo.csproj --framework net8.0
 ```
 
 ```bash
