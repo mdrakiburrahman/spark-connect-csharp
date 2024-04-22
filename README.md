@@ -6,6 +6,7 @@
     Communicating to Spark Connect Server with a thin C# gRPC Client.
     <br />
     <br />
+    ·
     <a href="https://www.nuget.org/packages/Apache.Spark.Connect#readme-body-tab">Nuget package</a>
     ·
     <a href="https://spark.apache.org/spark-connect/">Spark Connect Architecture</a>
