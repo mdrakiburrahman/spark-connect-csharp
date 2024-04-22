@@ -1,4 +1,23 @@
-# Apache Spark Connect Client for C#
+<!-- PROJECT LOGO -->
+<p align="center">
+  <img src="Logo.png" alt="Logo">
+  <h3 align="center">Apache Spark Connect Client for C#</h3>
+  <p align="center">
+    Communicating to Spark Connect Server with a thin C# gRPC Client.
+    <br />
+    <br />
+    <a href="https://www.nuget.org/packages/Apache.Spark.Connect#readme-body-tab">Nuget package</a>
+    ·
+    <a href="https://spark.apache.org/spark-connect/">Spark Connect Architecture</a>
+    .
+    <a href="https://spark.apache.org/docs/latest/spark-connect-overview.html">Spark Connect Overview</a>
+    ·
+    <a href="https://pkg.go.dev/github.com/apache/spark-connect-go/v34">Golang SDK</a>
+    ·
+    <a href="https://crates.io/crates/spark-connect-rs">Rust SDK</a>
+    ·
+  </p>
+</p>
 
 <!-- TOC -->
 
