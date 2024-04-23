@@ -1,6 +1,6 @@
 {
     "name": "MonitoringDevcontainer",
-    "image": "rakirahman.azurecr.io/devcontainer/spark-connect-csharp:74482637c8f61dd2a9fb55c8692cbe14c4bad85fa46a1b7c654b5a9f9e2bad18",
+    "image": "rakirahman.azurecr.io/devcontainer/spark-connect-csharp:acc97c1eeb12fca522b40ff7f0137c43156f65c87b81a361a8f012a92f5e22cc",
     "remoteUser": "vscode",
     "containerUser": "vscode"
 }

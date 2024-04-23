@@ -1,0 +1,14 @@
+name: Gated Check In
+"on":
+  pull_request:
+    branches:
+      - main
+jobs:
+  gci:
+    runs-on: ubuntu-latest
+    container:
+      image: >-
+        rakirahman.azurecr.io/devcontainer/spark-connect-csharp:acc97c1eeb12fca522b40ff7f0137c43156f65c87b81a361a8f012a92f5e22cc
+    steps:
+      - name: Simple test
+        run: (ls /.dockerenv && echo Found dockerenv) || (echo No dockerenv)
