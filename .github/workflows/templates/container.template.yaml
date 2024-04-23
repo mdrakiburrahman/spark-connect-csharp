@@ -1,3 +1,0 @@
-variables:
-  devcontainerImageName: rakirahman.azurecr.io/devcontainer/spark-connect-csharp
-  devcontainerImageTag: db665a94d13811201296827bcb868f4fc9ee23ed991149a0c22c05d05a9503a8

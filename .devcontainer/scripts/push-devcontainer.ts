@@ -1,19 +1,15 @@
 import { spawnSync } from 'child_process';
 import { Command, OptionValues } from 'commander';
 import { writeFileSync, readFileSync } from 'fs';
-import { dump } from 'js-yaml';
-import { registry, name, devcontainerFile, pipelineFile } from './const'
+import { load, dump } from 'js-yaml';
+import { registry, name, devcontainerFile, pipelineToImageKeyList } from './const'
 
-const program: Command = new Command()
-program
-    .name('push-devcontainer')
-    .description('Pushes the devcontainer image and updates the devcontainer.json file with the new tag')
-    .option('-r, --registry <registry>', 'The container registry to push the image to', registry)
-    .option('-n, --name <name>', 'The name of the image to create', name)
-    .option('-f, --file <file>', 'The devcontainer.json file to update', devcontainerFile)
-    .option('-p, --pipeline <pipeline>', 'The pipeline config file to update', pipelineFile)
-
-const opts: OptionValues = program.parse(process.argv).opts()
+const opts: OptionValues = {
+  registry: registry,
+  name: name,
+  file: devcontainerFile,
+  pipelineToImageKeyList: pipelineToImageKeyList
+};
 
 const fullImageName = `${opts.registry}/${opts.name}`
 const imageTag = readFileSync('.devcontainer/.devcontainer-hash.txt', 'utf8');
@@ -21,8 +17,15 @@ const imageTag = readFileSync('.devcontainer/.devcontainer-hash.txt', 'utf8');
 console.log(`Updating devcontainer config file: ${opts.file}`);
 updateDevcontainerConfigFile(fullImageName, imageTag, opts.file);
 
-console.log(`Updating pipeline config file: ${opts.pipeline}`);
-updatePipelineConfigFile(fullImageName, imageTag, opts.pipeline);
+// Github actions don't allow us to specify a runtime variable for an image,
+// so we git commit the image name and tag to the pipeline config files
+//
+// >>> https://docs.github.com/en/actions/using-jobs/running-jobs-in-a-container
+//
+opts.pipelineToImageKeyList.forEach(([pipeline, key]) => {
+  console.log(`Updating pipeline config file: ${pipeline}`);
+  updatePipelineConfigFile(key, `${fullImageName}:${imageTag}`, pipeline);
+});
 
 if (checkIfImageExists(fullImageName, imageTag)) {
     console.log(`Image ${fullImageName}:${imageTag} already exists in ACR. Skipping push...`);
@@ -91,20 +94,31 @@ function updateDevcontainerConfigFile(imageName: string, imageTag: string, filen
 }
 
 /**
- * Creates/updates an Azure Pipelines templates file with the
- * devcontainer image name and tag as variables
- * @param imageName The name of the image
- * @param imageTag The tag of the image
- * @param filename The filename to write/update
+ * Updates a specific key in a YAML file with a new value.
+ *
+ * @param keyToReplace A string representing the key to replace in the YAML file.
+ *                     The string should contain the path to the key, with each level separated by a colon.
+ *                     For example, to replace the key 'bar' in the object 'foo' which is in the object 'baz',
+ *                     the string would be 'baz:foo:bar'.
+ * @param value The new value to set for the key.
+ * @param filename The path to the YAML file to update.
+ *
+ * This function reads the YAML file into a JavaScript object, traverses the object to find the key to replace,
+ * updates the value of the key, and then writes the updated object back to the YAML file.
+ *
+ * Note: This function assumes that the YAML file and the keys exist. If they don't, you'll need to add error handling code.
  */
-function updatePipelineConfigFile(imageName: string, imageTag: string, filename: string) {
-    const data = {
-        variables: {
-            devcontainerImageName: imageName,
-            devcontainerImageTag: imageTag
-        }
-    }
+function updatePipelineConfigFile(keyToReplace: string, value: string, filename: string) {
+  const fileContents = readFileSync(filename, 'utf8');
+  const data = load(fileContents) as Record<string, any>;
 
-    const yaml = dump(data);
-    writeFileSync(filename, yaml);
+  const keys = keyToReplace.split(':');
+  let current: Record<string, any> = data;
+  for (let i = 0; i < keys.length - 1; i++) {
+      current = current[keys[i]] as Record<string, any>;
+  }
+  current[keys[keys.length - 1]] = value;
+
+  const yaml = dump(data);
+  writeFileSync(filename, yaml);
 }
